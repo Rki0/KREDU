@@ -21,7 +21,7 @@ function ToggledMenu({ setIsToggle, menuArr }: PropsType) {
     <div className="flex absolute top-0 left-0 w-screen h-screen">
       <div className="bg-[rgba(0,0,0,0.5)] w-1/3" onClick={toggleBtn}></div>
 
-      <div className="w-2/3 bg-white pt-1 px-2">
+      <nav className="w-2/3 bg-white pt-1 px-2">
         <div className="flex justify-between mb-4">
           <Link to="/">Ki0. 🇰🇷 📚 🇯🇵</Link>
 
@@ -44,7 +44,7 @@ function ToggledMenu({ setIsToggle, menuArr }: PropsType) {
             </li>
           ))}
         </ul>
-      </div>
+      </nav>
     </div>
   );
 }

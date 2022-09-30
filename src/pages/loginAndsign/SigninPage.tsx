@@ -4,6 +4,9 @@ import { BiShow, BiHide } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 
 function SigninPage() {
+  // 닉네임
+  const [nickname, setNickname] = useState("");
+
   // 이메일
   const [email, setEmail] = useState("");
 
@@ -32,6 +35,11 @@ function SigninPage() {
   const [showCheckPswd, setShowCheckPswd] = useState(false);
 
   const navigate = useNavigate();
+
+  // 닉네임
+  const nicknameHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNickname(e.target.value);
+  };
 
   // 이메일
   const emailHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -134,6 +142,23 @@ function SigninPage() {
           className="flex flex-col items-center mb-4 lg:text-lg xl:text-xl"
         >
           <div className="flex flex-col items-start mb-2">
+            <label htmlFor="nickname" className="font-bold">
+              닉네임
+            </label>
+
+            <input
+              id="nickname"
+              type="text"
+              placeholder="닉네임 입력(최대 10자)"
+              maxLength={10}
+              value={nickname}
+              onChange={nicknameHandler}
+              required
+              className="pl-2 font-semibold w-[250px] h-[40px] border-2 border-[#ffcdd2] rounded focus:border-[#e57373] focus:outline-none sm:w-[400px] md:w-[500px] lg:w-[500px]"
+            />
+          </div>
+
+          <div className="flex flex-col items-start mb-2">
             <label htmlFor="email" className="font-bold">
               이메일
             </label>
@@ -145,6 +170,7 @@ function SigninPage() {
               maxLength={30}
               value={email}
               onChange={emailHandler}
+              required
               className="pl-2 font-semibold w-[250px] h-[40px] border-2 border-[#ffcdd2] rounded focus:border-[#e57373] focus:outline-none sm:w-[400px] md:w-[500px] lg:w-[500px]"
             />
 
@@ -171,6 +197,7 @@ function SigninPage() {
               maxLength={15}
               value={password}
               onChange={passwordHandler}
+              required
               className="pl-2 font-semibold w-[250px] h-[40px] border-2 border-[#ffcdd2] rounded focus:border-[#64b5f6] focus:outline-none sm:w-[400px] md:w-[500px] lg:w-[500px]"
             />
 
@@ -204,6 +231,7 @@ function SigninPage() {
               maxLength={15}
               value={checkPassword}
               onChange={checkPasswordHandler}
+              required
               className="pl-2 mb-2 font-semibold w-[250px] h-[40px] border-2 border-[#ffcdd2] rounded focus:border-[#42a5f5] focus:outline-none sm:w-[400px] md:w-[500px] lg:w-[500px]"
             />
 

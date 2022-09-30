@@ -52,6 +52,7 @@ function LoginPage() {
               maxLength={20}
               value={email}
               onChange={emailHandler}
+              required
               className="pl-2 font-semibold w-[250px] h-[40px] border-2 border-[#ffcdd2] rounded focus:border-[#e57373] focus:outline-none sm:w-[400px] md:w-[500px] lg:w-[500px] lg:h-[50px]"
             />
           </div>
@@ -68,6 +69,7 @@ function LoginPage() {
               maxLength={15}
               value={password}
               onChange={passwordHandler}
+              required
               className="pl-2 mb-2 font-semibold w-[250px] h-[40px] border-2 border-[#ffcdd2] rounded focus:border-[#64b5f6] focus:outline-none sm:w-[400px] md:w-[500px] lg:w-[500px] lg:h-[50px]"
             />
 

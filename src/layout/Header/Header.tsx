@@ -15,6 +15,7 @@ function Header() {
     { title: "마이페이지", key: 2, to: "/mypage" },
     { title: "로그인 / 회원가입", key: 3, to: "/login" },
     { title: "로그아웃?", key: 4, to: "/logout" },
+    { title: "질문 게시판", key: 5, to: "/question" },
   ];
 
   return (
@@ -44,7 +45,7 @@ function Header() {
         <ToggledMenu setIsToggle={setIsToggle} menuArr={menuArr} />
       ) : null}
 
-      <div className="hidden lg:block h-1/2 w-full text-xl text-center">
+      <nav className="hidden lg:block h-1/2 w-full text-xl text-center">
         <ul className="flex flex-col">
           {menuArr.map((item) => (
             <li key={item.key}>
@@ -61,7 +62,7 @@ function Header() {
             </li>
           ))}
         </ul>
-      </div>
+      </nav>
     </header>
   );
 }
