@@ -23,6 +23,9 @@ function OneLecturePage() {
     navigate(-1);
   };
 
+  // 하나의 강의에 대한 데이터를 여기서 받아야함
+  // 넘어올 때 주면, 좋아요 누른 강의에서 여기로 넘어올 때 에러 발생함.
+
   return (
     <Layout>
       <div className="mt-4 px-2 md:px-4 lg:px-10">
