@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import Layout from "../../layout/Layout";
 import { BiShow, BiHide } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../hooks/reducerhooks";
+import { registerUser } from "../../_reducers/userSlice";
 
 function SigninPage() {
   // 닉네임
@@ -35,6 +37,7 @@ function SigninPage() {
   const [showCheckPswd, setShowCheckPswd] = useState(false);
 
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   // 닉네임
   const nicknameHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -115,9 +118,27 @@ function SigninPage() {
       return alert("올바르지 않은 정보를 입력하셨습니다.");
     }
 
-    console.log("유효성 검사 전부 통과!");
+    let body = {
+      nickname: nickname,
+      email: email,
+      password: password,
+    };
 
-    navigate("/login");
+    dispatch(registerUser(body))
+      .then((res) => {
+        if (res.payload?.success) {
+          alert("회원가입 성공. 로그인 화면으로 이동합니다.");
+          navigate("/login");
+        } else {
+          alert("회원가입 실패");
+        }
+      })
+      .catch((err) => console.log("회원가입 에러", err));
+
+    setNickname("");
+    setEmail("");
+    setPassword("");
+    setCheckPassword("");
   };
 
   // 비밀번호 보이기 / 숨기기
@@ -193,7 +214,8 @@ function SigninPage() {
             <input
               id="password"
               type={showPswd ? "text" : "password"}
-              placeholder="비밀번호 입력(최대 15자)"
+              placeholder="비밀번호 입력(8 ~ 15자)"
+              minLength={8}
               maxLength={15}
               value={password}
               onChange={passwordHandler}
@@ -228,6 +250,7 @@ function SigninPage() {
               id="checkPassword"
               type={showCheckPswd ? "text" : "password"}
               placeholder="비밀번호를 다시 확인해주세요"
+              minLength={8}
               maxLength={15}
               value={checkPassword}
               onChange={checkPasswordHandler}

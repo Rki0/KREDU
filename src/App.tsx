@@ -9,6 +9,7 @@ import OneLecturePage from "./pages/lecture/OneLecturePage";
 import OneWishPage from "./pages/wishcontents/OneWishPage";
 import LikeLecturesPage from "./pages/mypage/LikeLecturesPage";
 import ReviseMyInfoPage from "./pages/mypage/ReviseMyInfoPage";
+import WishWritePage from "./pages/wishcontents/WishWritePage";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signin" element={<SigninPage />} />
       <Route path="/wish" element={<WishContentsPage />} />
+      <Route path="/wish/write" element={<WishWritePage />} />
       <Route path="/wish/:wishnum" element={<OneWishPage />} />
     </Routes>
   );

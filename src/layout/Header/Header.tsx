@@ -14,8 +14,7 @@ function Header() {
     { title: "강의", key: 1, to: "/lecture" },
     { title: "마이페이지", key: 2, to: "/mypage" },
     { title: "로그인 / 회원가입", key: 3, to: "/login" },
-    { title: "로그아웃?", key: 4, to: "/logout" },
-    { title: "컨텐츠 건의", key: 5, to: "/wish" },
+    { title: "컨텐츠 건의", key: 4, to: "/wish" },
   ];
 
   return (
