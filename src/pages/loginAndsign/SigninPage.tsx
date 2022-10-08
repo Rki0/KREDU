@@ -122,6 +122,7 @@ function SigninPage() {
       nickname: nickname,
       email: email,
       password: password,
+      // profile: ""
     };
 
     dispatch(registerUser(body))
@@ -131,6 +132,7 @@ function SigninPage() {
           navigate("/login");
         } else {
           alert("회원가입 실패");
+          alert(res.payload?.message);
         }
       })
       .catch((err) => console.log("회원가입 에러", err));

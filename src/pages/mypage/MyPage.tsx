@@ -1,5 +1,6 @@
 import Layout from "../../layout/Layout";
 import { Link } from "react-router-dom";
+import { useAppSelector } from "../../hooks/reducerhooks";
 
 function MyPage() {
   // 유저 정보 가져오기 api 통신

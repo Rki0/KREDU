@@ -3,28 +3,54 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { AiOutlineLeft, AiOutlinePaperClip } from "react-icons/ai";
 import CommentTextarea from "../../components/CommentTextarea";
 import Comments from "../../components/Comments";
+import { useAppDispatch, useAppSelector } from "../../hooks/reducerhooks";
+import { useEffect, useState } from "react";
+import { loadOneLecture } from "../../_reducers/lectureSlice";
+
+interface TestType {
+  date: string;
+  description: string;
+  lectureId: number;
+  like: number;
+  link: string;
+  see: number;
+  title: string;
+  comments: any;
+}
+
+interface Type {
+  loadOneLectureSuccess: boolean;
+  lecture: TestType;
+}
 
 function OneLecturePage() {
   const params = useParams();
-  // console.log(params);
+  const lectureNum = Number(params.lecturenum);
 
   // useLocation 사용시 이전 페이지에서 넘어오는 것을 거쳐야지 데이터 전송이 됨에 주의
   // 새로고침만 하면 의미없음
   const location = useLocation();
   const data = location.state;
-  // console.log(data);
 
   const navigate = useNavigate();
 
   const goBack = () => {
-    // 둘의 성능 차이?
-    // 뒤로 돌아갔을 때 페이지네이션 이동 했던게 다시 리셋되는 이슈 발생
-    // navigate("/lecture");
-    navigate(-1);
+    navigate("/lecture");
   };
 
-  // 하나의 강의에 대한 데이터를 여기서 받아야함
-  // 넘어올 때 주면, 좋아요 누른 강의에서 여기로 넘어올 때 에러 발생함.
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    let body = {
+      lectureNum: lectureNum,
+    };
+
+    // location으로 받아오지 말고 그냥 여기서 스토어에 접근하는게 더 나을듯
+
+    dispatch(loadOneLecture(body))
+      .then((res) => {})
+      .catch((err) => console.log(err));
+  }, []);
 
   return (
     <Layout>
@@ -43,7 +69,7 @@ function OneLecturePage() {
 
           <div className="flex flex-col bg-[rgba(0,0,0,0.1)] rounded px-2 mb-4">
             <h1>강의 제목 : {data.title}</h1>
-            <p>업로드 날짜 : {data.id}</p>
+            <p>업로드 날짜 : {data.date}</p>
             <div>
               <AiOutlinePaperClip />
               교안 다운로드
@@ -54,7 +80,7 @@ function OneLecturePage() {
             <iframe
               width="560"
               height="315"
-              src="https://www.youtube.com/embed/V-MdUgZI9u4"
+              src={`https://www.youtube.com/embed/${data.link}`}
               title="YouTube video player"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -62,23 +88,7 @@ function OneLecturePage() {
             ></iframe>
           </div>
 
-          <section>
-            영상 관련 설명 써있는 곳. Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. Harum minima modi beatae culpa tempore laboriosam
-            enim repellendus architecto, accusamus odit id, neque velit
-            eligendi, laudantium pariatur maiores assumenda asperiores. Neque?
-            Unde cumque possimus quas sequi reiciendis magnam tempora?
-            Cupiditate, perspiciatis ipsam optio nemo exercitationem inventore
-            quo ut blanditiis tempore et nihil! Veritatis ea quidem adipisci
-            dolorum aperiam aliquam odio? Nesciunt! Porro alias nesciunt ab
-            atque ex molestiae nemo voluptatibus est culpa earum error accusamus
-            dolores libero dolorum accusantium facere vero aperiam veritatis,
-            aut ut eius officiis nisi blanditiis itaque! Tempora!
-            Necessitatibus, doloribus atque magnam totam dolor nobis deserunt,
-            quae quibusdam dolore cum fuga eveniet! Nemo, eveniet et. Quos
-            perferendis expedita quasi iusto quas, libero unde cum explicabo
-            ducimus voluptates inventore?
-          </section>
+          <section>{data.description}</section>
         </article>
 
         <CommentTextarea />

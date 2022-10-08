@@ -1,7 +1,15 @@
 import Layout from "../../layout/Layout";
 import { useState, useRef } from "react";
+import { useAppSelector, useAppDispatch } from "../../hooks/reducerhooks";
+import { uploadProfileImg } from "../../_reducers/userSlice";
+import axios from "axios";
+// import { useNavigate } from 'react-router-dom';
 
 function ReviseMyInfoPage() {
+  const userData = useAppSelector((state) => state.user.userData);
+  const dispatch = useAppDispatch();
+  // const navigate = useNavigate();
+
   const [profileImg, setProfileImg] = useState("");
 
   // 닉네임
@@ -39,6 +47,31 @@ function ReviseMyInfoPage() {
   const deleteImg = () => {
     URL.revokeObjectURL(profileImg);
     setProfileImg("");
+    // 기본 이미지로 전환 하기
+  };
+
+  // 프로필 이미지 서버 등록
+  const submitImgToServer = () => {
+    const formData = new FormData();
+
+    formData.append("file", profileImg);
+    // formData.append("email", userData.email);
+
+    axios
+      .post("/api/users/profile/img", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+
+    // // api 통신
+    // dispatch(uploadProfileImg(formData))
+    //   .then((res) => {
+    //     alert("프로필 이미지 수정 성공!");
+
+    //     // navigate("/mypage")
+    //   })
+    //   .catch((err) => console.log(err));
   };
 
   // 닉네임 onChange
@@ -115,6 +148,7 @@ function ReviseMyInfoPage() {
               <button
                 type="button"
                 className="border-2 p-1 text-sm rounded-md border-[#ffa4a2] hover:bg-[#ffa4a2] hover:text-white"
+                onClick={submitImgToServer}
               >
                 등록
               </button>

@@ -1,8 +1,22 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../../layout/Layout";
 import { BsSearch } from "react-icons/bs";
-import axios from "axios";
 import Table from "../../components/Table";
+import { Link } from "react-router-dom";
+import { useAppSelector, useAppDispatch } from "../../hooks/reducerhooks";
+import { loadAllLecture } from "../../_reducers/lectureSlice";
+
+interface lectureListType {
+  _id: string | undefined;
+  title: string | undefined;
+  date: string | undefined;
+  description: string | undefined;
+  link: string | undefined;
+  like: number | undefined;
+  see: number | undefined;
+  writer: string | undefined;
+  comments: Array<any> | undefined;
+}
 
 function LecturePage() {
   const [lecture, setLecture] = useState("");
@@ -18,22 +32,49 @@ function LecturePage() {
   };
 
   // 게시물
-  const [lectureList, setLectureList] = useState<any>([]);
+  const [lectureList, setLectureList] = useState<lectureListType[]>([]);
+  // 게시물 뒤집기
+  const [reversedLectureList, setReversedLectureList] = useState<
+    lectureListType[]
+  >([]);
 
-  // 더미 게시물 데이터
+  const userData = useAppSelector((state) => state.user.userData);
+  const lectureData = useAppSelector((state) => state.lecture.lectureData);
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
-    axios
-      .get("https://jsonplaceholder.typicode.com/posts")
-      .then((res) => setLectureList(res.data))
-      .catch((e) => console.log(e));
+    dispatch(loadAllLecture(null))
+      .then((res) => {
+        if (res.payload?.lectureList) {
+          setLectureList(res.payload.lectureList);
+        }
+      })
+      .catch((err) => console.log(err));
   }, []);
+
+  useEffect(() => {
+    let arr = [...lectureList];
+
+    arr.reverse();
+
+    setReversedLectureList(arr);
+  }, [lectureList]);
 
   return (
     <Layout>
       <div className="flex flex-col items-center px-2 mt-4  md:px-4 lg:px-10">
-        <h1 className="font-bold text-xl border-b-2 mb-2 w-full border-[#ffa4a2] sm:text-2xl md:text-3xl lg:hidden">
-          강의
-        </h1>
+        <div className="w-full border-b-2 mb-2 pb-1 border-[#ffa4a2] flex justify-between items-center">
+          <h1 className="font-bold text-xl sm:text-2xl md:text-3xl">강의</h1>
+
+          {userData.isAdmin ? (
+            <Link
+              to="/lecture/write"
+              className="px-2 rounded border-2 border-[#ffcdd2] hover:bg-[#ffcdd2] hover:text-white hover:font-semibold hover:cursor-pointer"
+            >
+              강의 올리기
+            </Link>
+          ) : null}
+        </div>
 
         {/* 제목과 일치하는 글자를 찾아서 모두 나열하는 방식. 파싱 같은게 필요할듯? */}
         <form className="my-4 relative" onSubmit={lectureSeacrhHandler}>
@@ -52,7 +93,11 @@ function LecturePage() {
           </button>
         </form>
 
-        <Table dataList={lectureList} />
+        {lectureData?.loadLectureSuccess ? (
+          <Table dataList={reversedLectureList} />
+        ) : (
+          <div>데이터 불러오는 중...</div>
+        )}
       </div>
     </Layout>
   );

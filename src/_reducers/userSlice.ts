@@ -32,10 +32,9 @@ export const registerUser = createAsyncThunk<
     //   withCredentials: true,
     // });
 
-    const { data } = await axios.post(
-      "http://localhost:5000/api/users/register",
-      registerInfo
-    );
+    const { data } = await axios.post("/api/users/register", registerInfo, {
+      withCredentials: true,
+    });
 
     return data;
   } catch (err) {
@@ -70,10 +69,13 @@ export const loginUser = createAsyncThunk<
   { rejectValue: MyKnownErrorLogin }
 >("users/loginUser", async (loginInfo, thunkAPI) => {
   try {
-    // const { data } = await axios.post("/api/users/login", loginInfo);
-    const { data } = await instance.post("/api/users/login", loginInfo, {
+    const { data } = await axios.post("/api/users/login", loginInfo, {
       withCredentials: true,
     });
+    // const { data } = await instance.post("/api/users/login", loginInfo, {
+    //   withCredentials: true,
+    // });
+
     return data;
   } catch (err) {
     return thunkAPI.rejectWithValue({
@@ -97,6 +99,7 @@ interface AuthDataFromServerType {
   error?: any;
   isAuth?: boolean;
   email?: string;
+  nickname: string;
   isAdmin?: boolean;
 }
 
@@ -106,10 +109,13 @@ export const authUser = createAsyncThunk<
   { rejectValue: MyKnownErrorAuth }
 >("users/authUser", async (authData, thunkAPI) => {
   try {
-    // const { data } = await axios.get("/api/users/auth");
-    const { data } = await instance.get("/api/users/auth", {
+    const { data } = await axios.get("/api/users/auth", {
       withCredentials: true,
     });
+    // const { data } = await instance.get("/api/users/auth", {
+    //   withCredentials: true,
+    // });
+
     return data;
   } catch (err) {
     return thunkAPI.rejectWithValue({
@@ -137,15 +143,51 @@ export const logoutUser = createAsyncThunk<
   { rejectValue: MyKnownErrorLogout }
 >("users/logoutUser", async (logoutData, thunkAPI) => {
   try {
-    // const { data } = await axios.get("/api/users/logout");
-    const { data } = await instance.get("/api/users/logout", {
+    const { data } = await axios.get("/api/users/logout", {
       withCredentials: true,
     });
+    // const { data } = await instance.get("/api/users/logout", {
+    //   withCredentials: true,
+    // });
+
     return data;
   } catch (err) {
     return thunkAPI.rejectWithValue({
       message: "로그아웃 API 통신 실패",
       logoutSuccess: false,
+    });
+  }
+});
+
+// 프로필 사진 등록
+interface MyKnownErrorUploadProfileImg {
+  message: string;
+  profileImgSuccess: boolean;
+}
+
+interface ProfileImgDataFromServerType {
+  profileImgSuccess?: boolean;
+  message?: string;
+  error?: any;
+}
+
+interface ProfileImgDataToSubmit {}
+
+export const uploadProfileImg = createAsyncThunk<
+  ProfileImgDataFromServerType,
+  ProfileImgDataToSubmit,
+  { rejectValue: MyKnownErrorUploadProfileImg }
+>("users/profile/img", async (profileInfo, thunkAPI) => {
+  try {
+    const { data } = await axios.post("/api/users/profile/img", profileInfo, {
+      withCredentials: true,
+    });
+
+    return data;
+  } catch (err) {
+    return thunkAPI.rejectWithValue({
+      message: "프로필 이미지 등록 API 통신 실패",
+      profileImgSuccess: false,
     });
   }
 });
@@ -238,6 +280,22 @@ export const userSlice = createSlice({
         state.userData = payload;
       })
       .addCase(logoutUser.rejected, (state, { payload }) => {
+        state.error = payload;
+        state.loading = false;
+      });
+
+    // 프로필 사진 등록 builder
+    builder
+      .addCase(uploadProfileImg.pending, (state) => {
+        state.error = null;
+        state.loading = true;
+      })
+      .addCase(uploadProfileImg.fulfilled, (state, { payload }) => {
+        state.error = null;
+        state.loading = false;
+        state.userData = payload;
+      })
+      .addCase(uploadProfileImg.rejected, (state, { payload }) => {
         state.error = payload;
         state.loading = false;
       });

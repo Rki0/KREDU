@@ -1,5 +1,6 @@
 import { GrClose } from "react-icons/gr";
 import { Link, NavLink } from "react-router-dom";
+import { useAppSelector } from "../../hooks/reducerhooks";
 
 interface menuArrType {
   title: string;
@@ -10,12 +11,15 @@ interface menuArrType {
 interface PropsType {
   setIsToggle: React.Dispatch<React.SetStateAction<boolean>>;
   menuArr: Array<menuArrType>;
+  logoutHandler: () => void;
 }
 
-function ToggledMenu({ setIsToggle, menuArr }: PropsType) {
+function ToggledMenu({ setIsToggle, menuArr, logoutHandler }: PropsType) {
   const toggleBtn = () => {
     setIsToggle(false);
   };
+
+  const userData = useAppSelector((state) => state.user.userData);
 
   return (
     <div className="flex absolute top-0 left-0 w-screen h-screen">
@@ -32,7 +36,10 @@ function ToggledMenu({ setIsToggle, menuArr }: PropsType) {
 
         <ul>
           {menuArr.map((item) => (
-            <li key={item.key} className="mb-4">
+            <li
+              key={item.key}
+              className={userData.isAuth ? "last:hidden mb-4" : "mb-4"}
+            >
               <NavLink
                 to={item.to}
                 className={({ isActive }) =>
@@ -44,6 +51,10 @@ function ToggledMenu({ setIsToggle, menuArr }: PropsType) {
             </li>
           ))}
         </ul>
+
+        {userData.isAuth ? (
+          <button onClick={logoutHandler}>로그아웃</button>
+        ) : null}
       </nav>
     </div>
   );

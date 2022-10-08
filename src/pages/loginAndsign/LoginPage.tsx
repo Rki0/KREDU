@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Layout from "../../layout/Layout";
 import { Link, useNavigate } from "react-router-dom";
 import { BiShow, BiHide } from "react-icons/bi";
+import { useAppDispatch } from "../../hooks/reducerhooks";
+import { loginUser } from "../../_reducers/userSlice";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
@@ -9,6 +11,7 @@ function LoginPage() {
   const [showPswd, setShowPswd] = useState(false);
 
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const emailHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -21,8 +24,18 @@ function LoginPage() {
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // api 통신
-    navigate("/");
+    const body = {
+      email: email,
+      password: password,
+    };
+
+    dispatch(loginUser(body))
+      .then((res) => {
+        if (res.payload?.loginSuccess) {
+          navigate("/");
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   const showPswdHandler = () => {

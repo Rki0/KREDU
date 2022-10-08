@@ -1,7 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../hooks/reducerhooks";
+import { writeCommentLecture } from "../_reducers/lectureSlice";
 
 function CommentTextarea() {
   const [comment, setComment] = useState("");
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  // 유저 정보
+  const userData = useAppSelector((state) => state.user.userData);
+
+  // 특정 강의 정보
+  const lectureData = useAppSelector(
+    (state) => state.lecture.oneLecture.lecture
+  );
+
+  const date = useMemo(() => {
+    return new Date().toLocaleDateString();
+  }, []);
 
   const commentHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setComment(e.target.value);
@@ -10,7 +27,49 @@ function CommentTextarea() {
   const commentSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log(comment);
+    if (!userData.isAuth) {
+      alert("로그인이 필요한 기능입니다.");
+
+      navigate("/login");
+
+      return;
+    }
+
+    let commentBody = {
+      // outterCommentId는 default로 생성되는 것 활용
+      nickname: userData.nickname,
+      email: userData.email,
+      date: date,
+      description: comment,
+      comments: [],
+    };
+
+    let copyComments = lectureData.comments;
+
+    let body = {
+      lectureId: lectureData.lectureId,
+      comments: [commentBody, ...copyComments],
+    };
+
+    // 데이터 구조 분리해서 사용할 경우
+    // let commentBody = {
+    //   // outterCommentId는 default로 생성되는 것 활용
+    //   nickname: userData.nickname,
+    //   email: userData.email,
+    //   date: date,
+    //   description: comment,
+    // };
+
+    // let body = {
+    //   lectureId: lectureData.lectureId,
+    //   comments: commentBody,
+    // };
+
+    dispatch(writeCommentLecture(body))
+      .then((res) => {})
+      .catch((err) => console.log(err));
+
+    setComment("");
   };
 
   const resetBtnHandler = () => {
@@ -20,7 +79,11 @@ function CommentTextarea() {
   return (
     <form className="flex flex-col" onSubmit={commentSubmitHandler}>
       <textarea
-        placeholder="댓글 입력"
+        placeholder={
+          userData.isAuth
+            ? "댓글 입력(최대 200자)"
+            : "로그인이 필요한 기능입니다."
+        }
         minLength={1}
         maxLength={200}
         value={comment}
