@@ -54,6 +54,8 @@ interface MyKnownErrorLogin {
 interface LoginDataFromServerType {
   loginSuccess?: boolean;
   email?: string;
+  nickname?: string;
+  user?: any;
   message?: string;
   error?: any;
 }
@@ -72,9 +74,6 @@ export const loginUser = createAsyncThunk<
     const { data } = await axios.post("/api/users/login", loginInfo, {
       withCredentials: true,
     });
-    // const { data } = await instance.post("/api/users/login", loginInfo, {
-    //   withCredentials: true,
-    // });
 
     return data;
   } catch (err) {
@@ -159,6 +158,43 @@ export const logoutUser = createAsyncThunk<
   }
 });
 
+// 강의 좋아요 등록
+interface MyKnownErrorLectureLike {
+  message: string;
+  lectureLikeSuccess: boolean;
+}
+
+interface LectureLikeFromServerType {
+  lectureLikeSuccess?: boolean;
+  message?: string;
+  error?: any;
+}
+
+interface LectureLikcToSubmit {
+  lectureId: number;
+  email: string;
+  likeList: any;
+}
+
+export const lectureLike = createAsyncThunk<
+  LectureLikeFromServerType,
+  LectureLikcToSubmit,
+  { rejectValue: MyKnownErrorLectureLike }
+>("users/lecture/like", async (lectureLike, thunkAPI) => {
+  try {
+    const { data } = await axios.post("/api/lecture/like", lectureLike, {
+      withCredentials: true,
+    });
+
+    return data;
+  } catch (err) {
+    return thunkAPI.rejectWithValue({
+      message: "강의 좋아요 등록 API 통신 실패",
+      lectureLikeSuccess: false,
+    });
+  }
+});
+
 // 프로필 사진 등록
 interface MyKnownErrorUploadProfileImg {
   message: string;
@@ -192,10 +228,47 @@ export const uploadProfileImg = createAsyncThunk<
   }
 });
 
+// 유저 정보 불러오기
+interface MyKnownErrorLoadUser {
+  message: string;
+  loadUserDataSuccess: boolean;
+}
+
+interface LoadUserDataFromServerType {
+  loadUserDataSuccess?: boolean;
+  message?: string;
+  error?: any;
+}
+
+interface LoadUserDataToSubmit {
+  email: string;
+}
+
+export const loadUserData = createAsyncThunk<
+  LoadUserDataFromServerType,
+  LoadUserDataToSubmit,
+  { rejectValue: MyKnownErrorLoadUser }
+>("users/all", async (userData, thunkAPI) => {
+  try {
+    const { data } = await axios.post("/api/user/all", userData, {
+      withCredentials: true,
+    });
+
+    return data;
+  } catch (err) {
+    return thunkAPI.rejectWithValue({
+      message: "유저 데이터 불러오기 API 통신 실패",
+      loadUserDataSuccess: false,
+    });
+  }
+});
+
 // slice
 export interface InitailStateType {
-  // userData: RegisterDataFromServerType;
   userData: any;
+  authData: any;
+  successData: any;
+  loginData: any;
   error:
     | null
     | unknown
@@ -208,6 +281,9 @@ export interface InitailStateType {
 
 const initialState: InitailStateType = {
   userData: {},
+  authData: {},
+  successData: {},
+  loginData: {},
   error: null,
   loading: false,
 };
@@ -228,7 +304,7 @@ export const userSlice = createSlice({
       .addCase(registerUser.fulfilled, (state, { payload }) => {
         state.error = null;
         state.loading = false;
-        state.userData = payload;
+        state.successData = payload;
       })
       // 통신 에러
       .addCase(registerUser.rejected, (state, { payload }) => {
@@ -245,7 +321,7 @@ export const userSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, { payload }) => {
         state.error = null;
         state.loading = false;
-        state.userData = payload;
+        state.loginData = payload;
       })
       .addCase(loginUser.rejected, (state, { payload }) => {
         state.error = payload;
@@ -261,7 +337,8 @@ export const userSlice = createSlice({
       .addCase(authUser.fulfilled, (state, { payload }) => {
         state.error = null;
         state.loading = false;
-        state.userData = payload;
+        state.authData = payload;
+        // state.userData = payload;
       })
       .addCase(authUser.rejected, (state, { payload }) => {
         state.error = payload;
@@ -277,9 +354,25 @@ export const userSlice = createSlice({
       .addCase(logoutUser.fulfilled, (state, { payload }) => {
         state.error = null;
         state.loading = false;
-        state.userData = payload;
+        state.successData = payload;
       })
       .addCase(logoutUser.rejected, (state, { payload }) => {
+        state.error = payload;
+        state.loading = false;
+      });
+
+    // 강의 좋아요 등록 builder
+    builder
+      .addCase(lectureLike.pending, (state) => {
+        state.error = null;
+        state.loading = true;
+      })
+      .addCase(lectureLike.fulfilled, (state, { payload }) => {
+        state.error = null;
+        state.loading = false;
+        state.successData = payload;
+      })
+      .addCase(lectureLike.rejected, (state, { payload }) => {
         state.error = payload;
         state.loading = false;
       });
@@ -296,6 +389,22 @@ export const userSlice = createSlice({
         state.userData = payload;
       })
       .addCase(uploadProfileImg.rejected, (state, { payload }) => {
+        state.error = payload;
+        state.loading = false;
+      });
+
+    // 유저 데이터 불러오기 builder
+    builder
+      .addCase(loadUserData.pending, (state) => {
+        state.error = null;
+        state.loading = true;
+      })
+      .addCase(loadUserData.fulfilled, (state, { payload }) => {
+        state.error = null;
+        state.loading = false;
+        state.userData = payload;
+      })
+      .addCase(loadUserData.rejected, (state, { payload }) => {
         state.error = payload;
         state.loading = false;
       });

@@ -1,10 +1,29 @@
 import Layout from "../../layout/Layout";
 import { Link } from "react-router-dom";
-import { useAppSelector } from "../../hooks/reducerhooks";
+import { useAppSelector, useAppDispatch } from "../../hooks/reducerhooks";
+import { useEffect } from "react";
+import { loadUserData } from "../../_reducers/userSlice";
 
 function MyPage() {
-  // 유저 정보 가져오기 api 통신
   // 각각 Link에 알맞은 데이터 송신해주기
+  const userData = useAppSelector((state) => state.user.userData);
+  const loginData = useAppSelector((state) => state.user.loginData);
+
+  const dispatch = useAppDispatch();
+
+  // userData 불러오기
+  // 굳이 마이페이지에서 유저 데이터를 불러오는 이유는
+  // 강의 좋아요 등 기능을 하고 왔을 때
+  // 데이터를 다시 불러오는게 아니라면 스토어에 업데이트가 되지 않기 때문이다.
+  useEffect(() => {
+    let body = {
+      email: loginData.email,
+    };
+
+    dispatch(loadUserData(body))
+      .then((res) => res.payload)
+      .catch((err) => console.log(err));
+  }, []);
 
   return (
     <Layout>
@@ -19,7 +38,7 @@ function MyPage() {
           </div>
 
           <p className="font-bold text-lg 2sm:text-xl sm:text-2xl md:text-3xl">
-            닉네임
+            {userData.nickname}
           </p>
         </div>
 

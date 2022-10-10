@@ -19,7 +19,7 @@ function ToggledMenu({ setIsToggle, menuArr, logoutHandler }: PropsType) {
     setIsToggle(false);
   };
 
-  const userData = useAppSelector((state) => state.user.userData);
+  const authData = useAppSelector((state) => state.user.authData);
 
   return (
     <div className="flex absolute top-0 left-0 w-screen h-screen">
@@ -38,7 +38,7 @@ function ToggledMenu({ setIsToggle, menuArr, logoutHandler }: PropsType) {
           {menuArr.map((item) => (
             <li
               key={item.key}
-              className={userData.isAuth ? "last:hidden mb-4" : "mb-4"}
+              className={authData.isAuth ? "last:hidden mb-4" : "mb-4"}
             >
               <NavLink
                 to={item.to}
@@ -52,7 +52,7 @@ function ToggledMenu({ setIsToggle, menuArr, logoutHandler }: PropsType) {
           ))}
         </ul>
 
-        {userData.isAuth ? (
+        {authData.isAuth ? (
           <button onClick={logoutHandler}>로그아웃</button>
         ) : null}
       </nav>

@@ -12,7 +12,7 @@ function Header() {
     setIsToggle(true);
   };
 
-  const userData = useAppSelector((state) => state.user.userData);
+  const authData = useAppSelector((state) => state.user.authData);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -67,7 +67,7 @@ function Header() {
       <nav className="hidden lg:block h-1/2 w-full text-xl text-center">
         <ul className="flex flex-col">
           {menuArr.map((item) => (
-            <li key={item.key} className={userData.isAuth ? "last:hidden" : ""}>
+            <li key={item.key} className={authData.isAuth ? "last:hidden" : ""}>
               <NavLink
                 to={item.to}
                 className={({ isActive }) =>
@@ -82,7 +82,7 @@ function Header() {
           ))}
         </ul>
 
-        {userData.isAuth ? (
+        {authData.isAuth ? (
           <button
             onClick={logoutHandler}
             className="text-center w-full py-3 px-3 active:bg-[#ffa4a2] hover:bg-[#cb9ca1]"

@@ -1,6 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Layout from "../../layout/Layout";
 import { useInterval } from "../../hooks/useInterval";
+import { useAppDispatch, useAppSelector } from "../../hooks/reducerhooks";
+import { loadUserData } from "../../_reducers/userSlice";
 
 function LandingPage() {
   // useMemo가 아니라 일반 변수로 선언하면
@@ -48,6 +50,26 @@ function LandingPage() {
       });
     }
   }, 150);
+
+  const loginData = useAppSelector((state) => state.user.loginData);
+  const authData = useAppSelector((state) => state.user.authData);
+  const dispatch = useAppDispatch();
+
+  // useEffect(() => {
+  //   // isAuth가 false라면 return
+  //   // 즉, 로그인하지 않은 유저라면 데이터를 불러올 필요가 없음.
+  //   if (!authData.isAuth) {
+  //     return;
+  //   }
+
+  //   let body = {
+  //     email: loginData.email,
+  //   };
+
+  //   dispatch(loadUserData(body))
+  //     .then((res) => res.payload)
+  //     .catch((err) => console.log(err));
+  // }, [authData]);
 
   return (
     <Layout>

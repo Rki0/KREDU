@@ -33,6 +33,8 @@ function LoginPage() {
       .then((res) => {
         if (res.payload?.loginSuccess) {
           navigate("/");
+        } else {
+          alert("가입되지 않은 정보입니다.");
         }
       })
       .catch((err) => console.log(err));
