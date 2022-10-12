@@ -3,7 +3,6 @@ import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks/reducerhooks";
 import { writeLecture } from "../../_reducers/lectureSlice";
-import axios from "axios";
 
 function LectureWritePage() {
   const [title, setTitle] = useState("");
@@ -65,38 +64,38 @@ function LectureWritePage() {
     navigate(-1);
   };
 
-  const userData = useAppSelector((state) => state.user.userData);
+  const authData = useAppSelector((state) => state.user.authData);
 
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const formData = new FormData();
+    // const formData = new FormData();
 
-    formData.append("file", file);
+    // formData.append("file", file);
 
-    axios({
-      method: "POST",
-      url: "/api/lecture/write",
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-      data: formData,
-    })
-      .then((res) => {
-        alert("강의 등록 성공!");
+    // axios({
+    //   method: "POST",
+    //   url: "/api/lecture/write",
+    //   headers: {
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    //   data: formData,
+    // })
+    //   .then((res) => {
+    //     alert("강의 등록 성공!");
 
-        navigate("/lecture");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    //     navigate("/lecture");
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
 
     // let body = {
     //   title: title,
     //   date: date,
     //   link: link,
     //   description: text,
-    //   writer: userData.email,
+    //   writer: authData.email,
     // };
 
     // console.log(file.name);
@@ -121,25 +120,25 @@ function LectureWritePage() {
     // formData만 서버에 보내야할 것 같다.
     // formData를 보내면 나머지 애들이 사라져버린다.
 
-    // let body = {
-    //   title: title,
-    //   date: date,
-    //   link: link,
-    //   // file: file,
-    //   file: formData,
-    //   description: text,
-    //   writer: userData.email,
-    // };
+    let body = {
+      title: title,
+      date: date,
+      link: link,
+      // file: file,
+      // file: formData,
+      description: text,
+      writer: authData.email,
+    };
 
-    // dispatch(writeLecture(body))
-    //   .then((res) => {
-    //     alert("강의 등록 성공!");
+    dispatch(writeLecture(body))
+      .then((res) => {
+        alert("강의 등록 성공!");
 
-    //     navigate("/lecture");
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+        navigate("/lecture");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 
     // dispatch(writeLecture(formData))
     //   .then((res) => {

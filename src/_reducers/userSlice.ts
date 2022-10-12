@@ -195,6 +195,42 @@ export const lectureLike = createAsyncThunk<
   }
 });
 
+// 강의 좋아요 취소 등록
+interface MyKnownErrorLectureDislike {
+  message: string;
+  lectureLikeSuccess: boolean;
+}
+
+interface LectureDislikeFromServerType {
+  lectureLikeSuccess?: boolean;
+  message?: string;
+  error?: any;
+}
+
+interface LectureDislikeToSubmit {
+  email: string;
+  link: string;
+}
+
+export const lectureDislike = createAsyncThunk<
+  LectureDislikeFromServerType,
+  LectureDislikeToSubmit,
+  { rejectValue: MyKnownErrorLectureDislike }
+>("users/lecture/dislike", async (lectureDislike, thunkAPI) => {
+  try {
+    const { data } = await axios.post("/api/lecture/dislike", lectureDislike, {
+      withCredentials: true,
+    });
+
+    return data;
+  } catch (err) {
+    return thunkAPI.rejectWithValue({
+      message: "강의 좋아요 취소 API 통신 실패",
+      lectureLikeSuccess: false,
+    });
+  }
+});
+
 // 프로필 사진 등록
 interface MyKnownErrorUploadProfileImg {
   message: string;
@@ -224,6 +260,42 @@ export const uploadProfileImg = createAsyncThunk<
     return thunkAPI.rejectWithValue({
       message: "프로필 이미지 등록 API 통신 실패",
       profileImgSuccess: false,
+    });
+  }
+});
+
+// 닉네임 수정하기
+interface MyKnownErrorReviseNickname {
+  message: string;
+  nicknameReviseSuccess: boolean;
+}
+
+interface ReviseNicknameFromServerType {
+  nicknameReviseSuccess?: boolean;
+  message?: string;
+  error?: any;
+}
+
+interface ReviseNicknameToSubmit {
+  email: string;
+  nickname: string;
+}
+
+export const reviseNickname = createAsyncThunk<
+  ReviseNicknameFromServerType,
+  ReviseNicknameToSubmit,
+  { rejectValue: MyKnownErrorReviseNickname }
+>("users/nickname/revise", async (userData, thunkAPI) => {
+  try {
+    const { data } = await axios.post("/api/users/nickname/revise", userData, {
+      withCredentials: true,
+    });
+
+    return data;
+  } catch (err) {
+    return thunkAPI.rejectWithValue({
+      message: "닉네임 수정하기 API 통신 실패",
+      nicknameReviseSuccess: false,
     });
   }
 });
@@ -371,8 +443,26 @@ export const userSlice = createSlice({
         state.error = null;
         state.loading = false;
         state.successData = payload;
+        // state.userData = payload;
       })
       .addCase(lectureLike.rejected, (state, { payload }) => {
+        state.error = payload;
+        state.loading = false;
+      });
+
+    // 강의 좋아요 취소 builder
+    builder
+      .addCase(lectureDislike.pending, (state) => {
+        state.error = null;
+        state.loading = true;
+      })
+      .addCase(lectureDislike.fulfilled, (state, { payload }) => {
+        state.error = null;
+        state.loading = false;
+        state.successData = payload;
+        // state.userData = payload;
+      })
+      .addCase(lectureDislike.rejected, (state, { payload }) => {
         state.error = payload;
         state.loading = false;
       });
@@ -389,6 +479,22 @@ export const userSlice = createSlice({
         state.userData = payload;
       })
       .addCase(uploadProfileImg.rejected, (state, { payload }) => {
+        state.error = payload;
+        state.loading = false;
+      });
+
+    // 닉네임 수정하기 builder
+    builder
+      .addCase(reviseNickname.pending, (state) => {
+        state.error = null;
+        state.loading = true;
+      })
+      .addCase(reviseNickname.fulfilled, (state, { payload }) => {
+        state.error = null;
+        state.loading = false;
+        state.successData = payload;
+      })
+      .addCase(reviseNickname.rejected, (state, { payload }) => {
         state.error = payload;
         state.loading = false;
       });

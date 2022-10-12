@@ -11,32 +11,13 @@ import Comments from "../../components/Comments";
 import { useAppDispatch, useAppSelector } from "../../hooks/reducerhooks";
 import { useEffect, useState } from "react";
 import { loadOneLecture } from "../../_reducers/lectureSlice";
-import { lectureLike, loadUserData } from "../../_reducers/userSlice";
-
-interface TestType {
-  date: string;
-  description: string;
-  lectureId: number;
-  like: number;
-  link: string;
-  see: number;
-  title: string;
-  comments: any;
-}
-
-interface Type {
-  loadOneLectureSuccess: boolean;
-  lecture: TestType;
-}
+import { lectureLike, lectureDislike } from "../../_reducers/userSlice";
 
 function OneLecturePage() {
   const params = useParams();
   const lectureNum = Number(params.lecturenum);
 
-  // useLocation 사용시 이전 페이지에서 넘어오는 것을 거쳐야지 데이터 전송이 됨에 주의
-  // 새로고침만 하면 의미없음
   const location = useLocation();
-  const data = location.state;
 
   const navigate = useNavigate();
 
@@ -51,8 +32,6 @@ function OneLecturePage() {
       lectureNum: lectureNum,
     };
 
-    // location으로 받아오지 말고 그냥 여기서 스토어에 접근하는게 더 나을듯
-
     dispatch(loadOneLecture(body))
       .then((res) => {})
       .catch((err) => console.log(err));
@@ -62,36 +41,15 @@ function OneLecturePage() {
 
   const userData = useAppSelector((state) => state.user.userData);
   const authData = useAppSelector((state) => state.user.authData);
-  const loginData = useAppSelector((state) => state.user.loginData);
   const lectureData = useAppSelector(
     (state) => state.lecture.oneLecture.lecture
   );
-
-  // 좋아요를 눌렀더라도 스토어에 있는 데이터가 업데이트되는 것은 아니므로
-  // 강제적으로 api 통신을 통해 userData를 갱신함
-  useEffect(() => {
-    // isAuth가 false라면 return
-    // 즉, 로그인하지 않은 유저라면 데이터를 불러올 필요가 없음.
-    if (!authData.isAuth) {
-      return;
-    }
-
-    let body = {
-      email: loginData.email,
-    };
-
-    dispatch(loadUserData(body))
-      .then((res) => res.payload)
-      .catch((err) => console.log(err));
-  }, []);
 
   // userData.liked에 해당 강의가 존재한다면
   // like라는 state를 true로 미리 바꿔놓음.
   useEffect(() => {
     // userData가 빈 객체라면 이걸 실행하지 않음
-    // 즉, 두 가지의 경우
-    // 1. 로그인하지 않은 유저
-    // 2. 로그인은 했지만, 좋아요는 하지않은 유저
+    // 즉, 로그인하지 않은 유저에 대해서는 이미 좋아요를 눌렀는지를 판별하지 않아도 됨.
     if (Object.keys(userData).length === 0) {
       return;
     }
@@ -108,16 +66,12 @@ function OneLecturePage() {
       // 12번 강의를 확인하면서 false로 돌아가버린다는 뜻
       // item.link === location.pathname ? setLike(true) : setLike(false)
       if (item.link === location.pathname) {
-        return setLike(true);
+        setLike(true);
       }
-
-      // 문제 발견
-      // 동작은 하는데, 이상함
-      // 좋아요 누르고, 뒤로 갔다가, 다시 들어오면 처리가 안되어있고
-      // 다시 한번 뒤로 갔다가 들어와야지 처리가 됨
     });
   }, []);
 
+  // 강의 좋아요 클릭 시
   const likeHandler = () => {
     if (!authData.isAuth) {
       return alert("로그인이 필요한 기능입니다.");
@@ -125,28 +79,39 @@ function OneLecturePage() {
 
     setLike(true);
 
+    // likedLectureId 설정
+    // userData.liked.length가 0보다 크면 데이터가 존재하는 것이므로, 그 데이터의 likedLectureId + 1
+    // 0보다 작거나 같다면 데이터가 없는 것이므로, 0으로 설정
+    // 현재 userData의 liked 배열의 첫번째 원소가 가장 최근에 좋아요를 누른 강의임
+    // 따라서 그 것의 likedLectureId를 가져와서 1을 증가시킨 것을
+    // 현재 좋아요 누른 강의의 likedLectureId로 사용하면 됨.
+    // 이러면 서버 단에서 코드를 작성할 필요가 없어짐.
+    let likedLectureId =
+      userData.liked.length > 0 ? userData.liked[0].likedLectureId + 1 : 0;
+
     let likeData = {
       thumbnail: `https://img.youtube.com/vi/${lectureData.link}/mqdefault.jpg`,
       link: location.pathname,
       title: lectureData.title,
       date: lectureData.date,
+      likedLectureId: likedLectureId,
     };
 
     let body = {
       lectureId: lectureData.lectureId,
       email: userData.email,
+      // 최근에 추가된 것이 마이페이지에서 상단에 보이도록 하기 위해
+      // 최신 데이터를 앞쪽에 넣음
       likeList: [likeData, ...userData.liked],
     };
 
-    // 강의 좋아요 등록 api 통신
     dispatch(lectureLike(body))
       .then((res) => res.payload)
       .catch((err) => console.log(err));
   };
 
+  // 강의 좋아요 취소 클릭 시
   const dislikeHandler = () => {
-    // 로그인이 안되어 있으면 보이지 않을 기능이지만
-    // 만일의 사태 대비
     if (!authData.isAuth) {
       return alert("로그인이 필요한 기능입니다.");
     }
@@ -154,6 +119,17 @@ function OneLecturePage() {
     setLike(false);
 
     // 강의 좋아요 취소 api 통신
+    // 전달해야할 데이터
+    // 실험1. 유저 이메일, 라우트 경로
+    // lectureId만 보내면 userData.liked에서 의미있는 데이터가 아니기 때문
+    let body = {
+      email: authData.email,
+      link: location.pathname,
+    };
+
+    dispatch(lectureDislike(body))
+      .then((res) => res.payload)
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -171,9 +147,36 @@ function OneLecturePage() {
             <p>강의 목록으로 돌아가기</p>
           </div>
 
-          <div className="flex flex-col bg-[rgba(0,0,0,0.1)] rounded px-2 mb-4">
-            <h1>강의 제목 : {data.title}</h1>
-            <p>업로드 날짜 : {data.date}</p>
+          {lectureData ? (
+            <div>
+              <div className="flex flex-col bg-[rgba(0,0,0,0.1)] rounded px-2 mb-4">
+                <h1>강의 제목 : {lectureData.title}</h1>
+                <p>업로드 날짜 : {lectureData.date}</p>
+                <div>
+                  <AiOutlinePaperClip />
+                  교안 다운로드
+                </div>
+              </div>
+
+              <div className="flex justify-center mb-4">
+                <iframe
+                  width="560"
+                  height="315"
+                  src={`https://www.youtube.com/embed/${lectureData.link}`}
+                  title="YouTube video player"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              </div>
+
+              <section className="mb-10">{lectureData.description}</section>
+            </div>
+          ) : null}
+
+          {/* <div className="flex flex-col bg-[rgba(0,0,0,0.1)] rounded px-2 mb-4">
+            <h1>강의 제목 : {lectureData.title}</h1>
+            <p>업로드 날짜 : {lectureData.date}</p>
             <div>
               <AiOutlinePaperClip />
               교안 다운로드
@@ -184,7 +187,7 @@ function OneLecturePage() {
             <iframe
               width="560"
               height="315"
-              src={`https://www.youtube.com/embed/${data.link}`}
+              src={`https://www.youtube.com/embed/${lectureData.link}`}
               title="YouTube video player"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -192,7 +195,7 @@ function OneLecturePage() {
             ></iframe>
           </div>
 
-          <section className="mb-10">{data.description}</section>
+          <section className="mb-10">{lectureData.description}</section> */}
 
           <div className="flex flex-col items-center mb-4">
             {like ? (

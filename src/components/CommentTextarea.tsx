@@ -1,17 +1,12 @@
 import React, { useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../hooks/reducerhooks";
 import { writeCommentLecture } from "../_reducers/lectureSlice";
 
 function CommentTextarea() {
   const [comment, setComment] = useState("");
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  // 유저 정보
-  const userData = useAppSelector((state) => state.user.userData);
-
-  // 특정 강의 정보
+  const authData = useAppSelector((state) => state.user.authData);
   const lectureData = useAppSelector(
     (state) => state.lecture.oneLecture.lecture
   );
@@ -27,18 +22,16 @@ function CommentTextarea() {
   const commentSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!userData.isAuth) {
+    if (!authData.isAuth) {
       alert("로그인이 필요한 기능입니다.");
-
-      navigate("/login");
 
       return;
     }
 
     let commentBody = {
       // outterCommentId는 default로 생성되는 것 활용
-      nickname: userData.nickname,
-      email: userData.email,
+      nickname: authData.nickname,
+      email: authData.email,
       date: date,
       description: comment,
       comments: [],
@@ -54,8 +47,8 @@ function CommentTextarea() {
     // 데이터 구조 분리해서 사용할 경우
     // let commentBody = {
     //   // outterCommentId는 default로 생성되는 것 활용
-    //   nickname: userData.nickname,
-    //   email: userData.email,
+    //   nickname: authData.nickname,
+    //   email: authData.email,
     //   date: date,
     //   description: comment,
     // };
@@ -66,7 +59,7 @@ function CommentTextarea() {
     // };
 
     dispatch(writeCommentLecture(body))
-      .then((res) => {})
+      .then((res) => res.payload)
       .catch((err) => console.log(err));
 
     setComment("");
@@ -80,7 +73,7 @@ function CommentTextarea() {
     <form className="flex flex-col" onSubmit={commentSubmitHandler}>
       <textarea
         placeholder={
-          userData.isAuth
+          authData.isAuth
             ? "댓글 입력(최대 200자)"
             : "로그인이 필요한 기능입니다."
         }
@@ -103,7 +96,7 @@ function CommentTextarea() {
           type="submit"
           className="px-2 border-2 rounded border-[rgba(0,0,0,0.5)] hover:border-transparent hover:bg-[#64b5f6] hover:text-white"
         >
-          댓글
+          등록
         </button>
       </div>
     </form>

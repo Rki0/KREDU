@@ -64,8 +64,8 @@ function Table({ dataList }: any) {
     // 2. useLocation 사용해보기(성공)
     // 단, hooks는 컴포넌트 직계 자식으로 들어있어야하므로 사용 시 주의 필요
 
-    navigate(`${location.pathname}/${item.lectureId}`, { state: item });
-    // navigate(`${location.pathname}/${item.id}`, { state: item });
+    navigate(`${location.pathname}/${item.lectureId}`);
+    // navigate(`${location.pathname}/${item.lectureId}`, { state: item });
   };
 
   // 페이지네이션

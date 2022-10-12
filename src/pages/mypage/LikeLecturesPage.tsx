@@ -13,23 +13,24 @@ function LikeLecturesPage() {
         </h1>
 
         <article>
-          {userData.liked.map((item: any) => (
+          {userData.liked.map((item: any, index: number) => (
             <Link
-              key={item.id}
+              key={index}
               to={item.link}
-              className="flex items-center border-b-2 border-[rgba(255,164,161,0.3)] py-2"
+              className="flex items-center border-b-2 border-[rgba(255,164,161,0.3)] py-2 hover:bg-[rgba(0,0,0,0.05)]"
             >
-              <div className="w-[120px] mr-2">
+              <div className="w-1/3 max-w-[120px] mr-2">
                 <img alt="thumbnail" src={item.thumbnail} />
               </div>
 
-              <div>
-                <div className="w-[100px]">
+              <div className="w-2/3">
+                <div>
                   <h2 className="truncate">{item.title}</h2>
                 </div>
 
-                <div className="flex">
+                <div className="flex flex-col">
                   <p>{item.date}</p>
+                  <p>조회수</p>
                 </div>
               </div>
             </Link>

@@ -17,25 +17,25 @@ interface LectureWriteDataFromServerType {
   error?: any;
 }
 
-// interface LectureWriteDataToSubmit {
-//   title: string;
-//   date: string;
-//   link: string;
-//   // file: string | Blob;
-//   description: string;
-//   writer: string;
-// }
-
 interface LectureWriteDataToSubmit {
-  // formData: FormData;
-  formData: FormData;
-  // title: string;
-  // date: string;
-  // link: string;
+  title: string;
+  date: string;
+  link: string;
   // file: string | Blob;
-  // description: string;
-  // writer: string;
+  description: string;
+  writer: string;
 }
+
+// interface LectureWriteDataToSubmit {
+//   // formData: FormData;
+//   formData: FormData;
+//   // title: string;
+//   // date: string;
+//   // link: string;
+//   // file: string | Blob;
+//   // description: string;
+//   // writer: string;
+// }
 
 export const writeLecture = createAsyncThunk<
   LectureWriteDataFromServerType,
@@ -43,18 +43,18 @@ export const writeLecture = createAsyncThunk<
   { rejectValue: MyKnownErrorLectureWrite }
 >("lecture/write", async (lectureWriteInfo, thunkAPI) => {
   try {
-    // const { data } = await axios.post("/api/lecture/write", lectureWriteInfo, {
-    //   withCredentials: true,
-    // });
-
-    const { data } = await axios({
-      method: "POST",
-      url: "/api/lecture/write",
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-      data: lectureWriteInfo,
+    const { data } = await axios.post("/api/lecture/write", lectureWriteInfo, {
+      withCredentials: true,
     });
+
+    // const { data } = await axios({
+    //   method: "POST",
+    //   url: "/api/lecture/write",
+    //   headers: {
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    //   data: lectureWriteInfo,
+    // });
 
     return data;
   } catch (err) {
@@ -164,7 +164,6 @@ interface WriteCommentLectureDataFromServerType {
 
 interface WriteCommentLectureDataToSubmit {
   lectureId: number;
-  // comments: Array<any>;
   comments: any;
 }
 
@@ -195,7 +194,7 @@ export const writeCommentLecture = createAsyncThunk<
 export interface InitailStateType {
   lectureData: any;
   oneLecture: any;
-  addLectureComment: any;
+  successData: any;
   error:
     | null
     | unknown
@@ -208,7 +207,7 @@ export interface InitailStateType {
 const initialState: InitailStateType = {
   lectureData: {},
   oneLecture: {},
-  addLectureComment: {},
+  successData: {},
   error: null,
   loading: false,
 };
@@ -286,7 +285,7 @@ export const lectureSlice = createSlice({
       .addCase(writeCommentLecture.fulfilled, (state, { payload }) => {
         state.error = null;
         state.loading = false;
-        state.addLectureComment = payload;
+        state.successData = payload;
       })
       // 통신 에러
       .addCase(writeCommentLecture.rejected, (state, { payload }) => {

@@ -38,7 +38,7 @@ function MyPage() {
           </div>
 
           <p className="font-bold text-lg 2sm:text-xl sm:text-2xl md:text-3xl">
-            {userData.nickname}
+            안녕하세요, {userData.nickname}님!
           </p>
         </div>
 

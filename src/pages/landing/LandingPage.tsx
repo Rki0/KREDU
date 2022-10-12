@@ -55,21 +55,23 @@ function LandingPage() {
   const authData = useAppSelector((state) => state.user.authData);
   const dispatch = useAppDispatch();
 
-  // useEffect(() => {
-  //   // isAuth가 false라면 return
-  //   // 즉, 로그인하지 않은 유저라면 데이터를 불러올 필요가 없음.
-  //   if (!authData.isAuth) {
-  //     return;
-  //   }
+  // authData의 isAuth가 변경되면 useEffect 실행
+  // 즉, 로그인 전 -> 로그인 후를 감지
+  useEffect(() => {
+    // isAuth가 false라면 return
+    // 즉, 로그인하지 않은 유저라면 데이터를 불러올 필요가 없음.
+    if (!authData.isAuth) {
+      return;
+    }
 
-  //   let body = {
-  //     email: loginData.email,
-  //   };
+    let body = {
+      email: authData.email,
+    };
 
-  //   dispatch(loadUserData(body))
-  //     .then((res) => res.payload)
-  //     .catch((err) => console.log(err));
-  // }, [authData]);
+    dispatch(loadUserData(body))
+      .then((res) => res.payload)
+      .catch((err) => console.log(err));
+  }, [authData.isAuth]);
 
   return (
     <Layout>
