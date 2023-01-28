@@ -1,6 +1,8 @@
-import { GrClose } from "react-icons/gr";
+import { useContext } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { useAppSelector } from "../../hooks/reducerhooks";
+
+import { GrClose } from "react-icons/gr";
+import { AuthContext } from "../../context/auth-context";
 
 interface menuArrType {
   title: string;
@@ -15,17 +17,17 @@ interface PropsType {
 }
 
 function ToggledMenu({ setIsToggle, menuArr, logoutHandler }: PropsType) {
+  const auth = useContext(AuthContext);
+
   const toggleBtn = () => {
     setIsToggle(false);
   };
 
-  const authData = useAppSelector((state) => state.user.authData);
-
   return (
-    <div className="flex absolute top-0 left-0 w-screen h-screen">
+    <div className="absolute top-0 left-0 flex w-screen h-screen">
       <div className="bg-[rgba(0,0,0,0.5)] w-1/3" onClick={toggleBtn}></div>
 
-      <nav className="w-2/3 bg-white pt-1 px-2">
+      <nav className="w-2/3 px-2 pt-1 bg-white">
         <div className="flex justify-between mb-4">
           <Link to="/">Ki0. 🇰🇷 📚 🇯🇵</Link>
 
@@ -38,7 +40,7 @@ function ToggledMenu({ setIsToggle, menuArr, logoutHandler }: PropsType) {
           {menuArr.map((item) => (
             <li
               key={item.key}
-              className={authData.isAuth ? "last:hidden mb-4" : "mb-4"}
+              className={auth.isLoggedIn ? "last:hidden mb-4" : "mb-4"}
             >
               <NavLink
                 to={item.to}
@@ -52,7 +54,7 @@ function ToggledMenu({ setIsToggle, menuArr, logoutHandler }: PropsType) {
           ))}
         </ul>
 
-        {authData.isAuth ? (
+        {auth.isLoggedIn ? (
           <button onClick={logoutHandler}>로그아웃</button>
         ) : null}
       </nav>

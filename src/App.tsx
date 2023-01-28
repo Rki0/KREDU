@@ -1,78 +1,83 @@
-import { Routes, Route } from "react-router-dom";
-import LandingPage from "./pages/landing/LandingPage";
-import LecturePage from "./pages/lecture/LecturePage";
-import MyPage from "./pages/mypage/MyPage";
-import LoginPage from "./pages/loginAndsign/LoginPage";
-import SigninPage from "./pages/loginAndsign/SigninPage";
-import WishContentsPage from "./pages/wishcontents/WishContentsPage";
-import OneLecturePage from "./pages/lecture/OneLecturePage";
-import OneWishPage from "./pages/wishcontents/OneWishPage";
-import LikeLecturesPage from "./pages/mypage/LikeLecturesPage";
-import ReviseMyInfoPage from "./pages/mypage/ReviseMyInfoPage";
-import WishWritePage from "./pages/wishcontents/WishWritePage";
-import LectureWritePage from "./pages/lecture/LectureWritePage";
-import Auth from "./hoc/Auth";
+import React, { Suspense } from "react";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+
+import { AuthContext } from "./context/auth-context";
+import { useAuth } from "./hoc/auth-hook";
+import AnyRoute from "./routes/AnyRoute";
+import PrivateRoute from "./routes/PrivateRoute";
+import PublicRoute from "./routes/PublicRoute";
+import UnValidPage from "./pages/UnValid/UnValidPage";
+
+const LandingPage = React.lazy(() => import("./pages/landing/LandingPage"));
+const LecturePage = React.lazy(() => import("./pages/lecture/LecturePage"));
+const MyPage = React.lazy(() => import("./pages/mypage/MyPage"));
+const LoginPage = React.lazy(() => import("./pages/loginAndsign/LoginPage"));
+const SignupPage = React.lazy(() => import("./pages/loginAndsign/SignupPage"));
+const WishContentsPage = React.lazy(
+  () => import("./pages/wishcontents/WishContentsPage")
+);
+const OneLecturePage = React.lazy(
+  () => import("./pages/lecture/OneLecturePage")
+);
+const OneWishPage = React.lazy(
+  () => import("./pages/wishcontents/OneWishPage")
+);
+const LikeLecturesPage = React.lazy(
+  () => import("./pages/mypage/LikeLecturesPage")
+);
+const ReviseMyInfoPage = React.lazy(
+  () => import("./pages/mypage/ReviseMyInfoPage")
+);
+const WishWritePage = React.lazy(
+  () => import("./pages/wishcontents/WishWritePage")
+);
+const LectureWritePage = React.lazy(
+  () => import("./pages/lecture/LectureWritePage")
+);
 
 function App() {
-  // 누구나 접근 가능
-  const AuthenticLandingPage = Auth(LandingPage, null);
-  const AuthenticLecturePage = Auth(LecturePage, null);
-  const AuthenticWishContentsPage = Auth(WishContentsPage, null);
-  const AuthenticOneLecturePage = Auth(OneLecturePage, null);
-  const AuthenticOneOneWishPage = Auth(OneWishPage, null);
-
-  // 로그인한 사람만 접근 가능
-  const AuthenticMyPage = Auth(MyPage, true);
-  const AuthenticLikeLecturesPage = Auth(LikeLecturesPage, true);
-  const AuthenticReviseMyInfoPage = Auth(ReviseMyInfoPage, true);
-  const AuthenticWishWritePage = Auth(WishWritePage, true);
-
-  // 로그인한 사람은 접근 불가능
-  const AuthenticLoginPage = Auth(LoginPage, false);
-  const AuthenticSigninPage = Auth(SigninPage, false);
-
-  // 관리자만 접근 가능
-  const AuthenticLectureWritePage = Auth(LectureWritePage, true, true);
+  const { token, login, logout, userId, manager } = useAuth();
 
   return (
-    <Routes>
-      <Route path="/" element={<AuthenticLandingPage />} />
-      <Route path="/lecture" element={<AuthenticLecturePage />} />
-      <Route
-        path="/lecture/:lecturenum"
-        element={<AuthenticOneLecturePage />}
-      />
-      <Route path="/lecture/write" element={<AuthenticLectureWritePage />} />
-      <Route path="/mypage" element={<AuthenticMyPage />} />
-      <Route
-        path="/mypage/likelectures"
-        element={<AuthenticLikeLecturesPage />}
-      />
-      <Route
-        path="/mypage/revisemyinfo"
-        element={<AuthenticReviseMyInfoPage />}
-      />
-      <Route path="/login" element={<AuthenticLoginPage />} />
-      <Route path="/signin" element={<AuthenticSigninPage />} />
-      <Route path="/wish" element={<AuthenticWishContentsPage />} />
-      <Route path="/wish/write" element={<AuthenticWishWritePage />} />
-      <Route path="/wish/:wishnum" element={<AuthenticOneOneWishPage />} />
-    </Routes>
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
+      <AuthContext.Provider
+        value={{ isLoggedIn: !!token, token, userId, login, logout, manager }}
+      >
+        <Suspense fallback={<div>Loading...</div>}>
+          <Routes>
+            <Route element={<AnyRoute />}>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/lecture" element={<LecturePage />} />
+              <Route path="/lecture/:lecturenum" element={<OneLecturePage />} />
+              <Route path="/wish" element={<WishContentsPage />} />
+              <Route path="/wish/:wishnum" element={<OneWishPage />} />
+            </Route>
 
-    // <Routes>
-    //   <Route path="/" element={<LandingPage />} />
-    //   <Route path="/lecture" element={<LecturePage />} />
-    //   <Route path="/lecture/:lecturenum" element={<OneLecturePage />} />
-    //   <Route path="/lecture/write" element={<LectureWritePage />} />
-    //   <Route path="/mypage" element={<MyPage />} />
-    //   <Route path="/mypage/likelectures" element={<LikeLecturesPage />} />
-    //   <Route path="/mypage/revisemyinfo" element={<ReviseMyInfoPage />} />
-    //   <Route path="/login" element={<LoginPage />} />
-    //   <Route path="/signin" element={<SigninPage />} />
-    //   <Route path="/wish" element={<WishContentsPage />} />
-    //   <Route path="/wish/write" element={<WishWritePage />} />
-    //   <Route path="/wish/:wishnum" element={<OneWishPage />} />
-    // </Routes>
+            <Route element={<PrivateRoute />}>
+              <Route path="/mypage" element={<MyPage />} />
+              <Route
+                path="/mypage/likelectures"
+                element={<LikeLecturesPage />}
+              />
+              <Route
+                path="/mypage/revisemyinfo"
+                element={<ReviseMyInfoPage />}
+              />
+            </Route>
+
+            <Route element={<PublicRoute />}>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/signup" element={<SignupPage />} />
+            </Route>
+
+            <Route path="/lecture/write" element={<LectureWritePage />} />
+            <Route path="/wish/write" element={<WishWritePage />} />
+
+            <Route path="/*" element={<UnValidPage />} />
+          </Routes>
+        </Suspense>
+      </AuthContext.Provider>
+    </BrowserRouter>
   );
 }
 
