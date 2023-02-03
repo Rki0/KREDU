@@ -1,47 +1,65 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+
 import Layout from "../../layout/Layout";
-import { Link, useNavigate } from "react-router-dom";
-import { BiShow, BiHide } from "react-icons/bi";
-import { useAppDispatch } from "../../hooks/reducerhooks";
-import { loginUser } from "../../_reducers/userSlice";
+import PassToAnotherAuth from "./PassToAnotherAuth";
+import { useHttpClient } from "../../hoc/http-hook";
+import { useForm } from "../../hoc/useForm";
+import Input from "../../components/Input";
+import {
+  VALIDATOR_EMAIL,
+  VALIDATOR_MINLENGTH,
+  VALIDATOR_MAXLENGTH,
+} from "../../utils/validators";
+import Button from "../../components/Button";
+import { AuthContext } from "../../context/auth-context";
 
 function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPswd, setShowPswd] = useState(false);
+  const [formState, inputHandler] = useForm(
+    {
+      email: {
+        value: "",
+        isValid: false,
+      },
+      password: {
+        value: "",
+        isValid: false,
+      },
+    },
+    false
+  );
 
+  const auth = useContext(AuthContext);
+  const { sendRequest } = useHttpClient();
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
 
-  const emailHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-
-  const passwordHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
-
-  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+  const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const body = {
-      email: email,
-      password: password,
-    };
-
-    dispatch(loginUser(body))
-      .then((res) => {
-        if (res.payload?.loginSuccess) {
-          navigate("/");
-        } else {
-          alert("가입되지 않은 정보입니다.");
+    try {
+      const responseData = await sendRequest(
+        "http://localhost:8080/api/users/login",
+        // `${process.env.REACT_APP_BASE_URL}/users/signup`,
+        "POST",
+        JSON.stringify({
+          email: formState.inputs.email.value,
+          password: formState.inputs.password.value,
+        }),
+        {
+          "Content-Type": "application/json",
         }
-      })
-      .catch((err) => console.log(err));
-  };
+      );
 
-  const showPswdHandler = () => {
-    setShowPswd((prev) => !prev);
+      auth.login(
+        responseData.userId,
+        responseData.token,
+        null,
+        responseData.manager
+      );
+
+      alert("로그인에 성공했습니다. 메인 페이지로 이동합니다.");
+      navigate("/");
+    } catch (err) {}
   };
 
   return (
@@ -55,67 +73,35 @@ function LoginPage() {
           onSubmit={submitHandler}
           className="flex flex-col items-center mb-4 lg:text-lg xl:text-xl"
         >
-          <div className="flex flex-col items-start mb-2">
-            <label htmlFor="email" className="font-bold">
-              이메일
-            </label>
+          <Input
+            id="email"
+            type="email"
+            label="이메일"
+            placeholder="이메일을 입력해주세요."
+            value={formState.inputs.email.value}
+            onInput={inputHandler}
+            validators={[VALIDATOR_EMAIL()]}
+          />
 
-            <input
-              id="email"
-              type="email"
-              placeholder="이메일을 입력해주세요"
-              maxLength={20}
-              value={email}
-              onChange={emailHandler}
-              required
-              className="pl-2 font-semibold w-[250px] h-[40px] border-2 border-[#ffcdd2] rounded focus:border-[#e57373] focus:outline-none sm:w-[400px] md:w-[500px] lg:w-[500px] lg:h-[50px]"
-            />
-          </div>
+          <Input
+            id="password"
+            label="비밀번호"
+            type="password"
+            placeholder="비밀번호를 입력해주세요."
+            minLength={8}
+            maxLength={12}
+            value={formState.inputs.password.value}
+            onInput={inputHandler}
+            validators={[VALIDATOR_MINLENGTH(8), VALIDATOR_MAXLENGTH(12)]}
+          />
 
-          <div className="flex flex-col items-start mb-2 relative lg:text-xl">
-            <label htmlFor="password" className="font-bold">
-              비밀번호
-            </label>
-
-            <input
-              id="password"
-              type={showPswd ? "text" : "password"}
-              placeholder="비밀번호를 입력해주세요"
-              maxLength={15}
-              value={password}
-              onChange={passwordHandler}
-              required
-              className="pl-2 mb-2 font-semibold w-[250px] h-[40px] border-2 border-[#ffcdd2] rounded focus:border-[#64b5f6] focus:outline-none sm:w-[400px] md:w-[500px] lg:w-[500px] lg:h-[50px]"
-            />
-
-            <div
-              onClick={showPswdHandler}
-              className="absolute top-9 right-3 lg:top-11"
-            >
-              {showPswd ? <BiHide /> : <BiShow />}
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            className="font-bold border-2 border-[#ffcdd2] rounded w-32 hover:bg-[#ffcdd2] hover:text-white sm:w-[150px] lg:text-lg xl:text-xl"
-          >
+          <Button isValid={formState.isValid} submitMode={true}>
             로그인
-          </button>
+          </Button>
         </form>
 
-        <Link
-          to="/signin"
-          className="text-center font-bold border-2 border-[#ffcdd2] rounded w-32 hover:bg-[#ffcdd2] hover:text-white sm:w-[150px] lg:text-lg xl:text-xl"
-        >
-          회원가입
-        </Link>
+        <PassToAnotherAuth now="로그인" to="회원가입" />
       </div>
-
-      {/* <a>카카오 로그인</a>
-      <a>라인 로그인</a>
-      <a>네이버 로그인</a>
-      <a>구글 로그인</a> */}
     </Layout>
   );
 }
