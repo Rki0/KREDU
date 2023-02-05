@@ -6,7 +6,7 @@ function TeacherProfile() {
       <img
         src={process.env.PUBLIC_URL + "/img/profile.jpg"}
         alt="profile"
-        className="w-40 h-40 mb-4 bg-white rounded-full"
+        className="w-[180px] h-[180px] mb-4 bg-white rounded-full"
       />
 
       <span className="text-lg">박기영</span>

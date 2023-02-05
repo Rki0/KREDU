@@ -7,6 +7,7 @@ import AnyRoute from "./routes/AnyRoute";
 import PrivateRoute from "./routes/PrivateRoute";
 import PublicRoute from "./routes/PublicRoute";
 import UnValidPage from "./pages/UnValid/UnValidPage";
+import ManagerRoute from "./routes/ManagerRoute";
 
 const LandingPage = React.lazy(() => import("./pages/landing/LandingPage"));
 const LecturePage = React.lazy(() => import("./pages/lecture/LecturePage"));
@@ -48,7 +49,7 @@ function App() {
             <Route element={<AnyRoute />}>
               <Route path="/" element={<LandingPage />} />
               <Route path="/lecture" element={<LecturePage />} />
-              <Route path="/lecture/:lecturenum" element={<OneLecturePage />} />
+              <Route path="/lecture/:lectureId" element={<OneLecturePage />} />
               <Route path="/wish" element={<WishContentsPage />} />
               <Route path="/wish/:wishnum" element={<OneWishPage />} />
             </Route>
@@ -63,6 +64,7 @@ function App() {
                 path="/mypage/revisemyinfo"
                 element={<ReviseMyInfoPage />}
               />
+              <Route path="/wish/write" element={<WishWritePage />} />
             </Route>
 
             <Route element={<PublicRoute />}>
@@ -70,8 +72,9 @@ function App() {
               <Route path="/signup" element={<SignupPage />} />
             </Route>
 
-            <Route path="/lecture/write" element={<LectureWritePage />} />
-            <Route path="/wish/write" element={<WishWritePage />} />
+            <Route element={<ManagerRoute />}>
+              <Route path="/lecture/write" element={<LectureWritePage />} />
+            </Route>
 
             <Route path="/*" element={<UnValidPage />} />
           </Routes>

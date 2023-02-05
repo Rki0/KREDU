@@ -64,12 +64,7 @@ function FileUpload(props: FileUploadProps) {
 
         {file &&
           file.map((item: any, index: number) => (
-            <File
-              item={item}
-              index={index}
-              onDelete={onDelete}
-              key={item.name}
-            />
+            <File item={item} index={index} onDelete={onDelete} key={index} />
           ))}
       </div>
     </div>

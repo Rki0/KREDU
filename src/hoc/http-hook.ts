@@ -30,6 +30,7 @@ export const useHttpClient = () => {
         });
 
         // 새로운 프로미스 반환됨.
+        // json으로 변환하는 것은 좋지만, 그 외, 이미지나 파일을 받아오는 경우에는 이게 문제가 됨. 주의
         const responseData = await response.json();
 
         // 응답이 성공한 경우에는 activeHttpRequest에서 해당 요청을 비워줘야함.

@@ -1,7 +1,6 @@
 import React from "react";
 
 import { AiOutlinePaperClip } from "react-icons/ai";
-import { useHttpClient } from "../../hoc/http-hook";
 
 interface ContentPropsType {
   title: string;
@@ -12,21 +11,16 @@ interface ContentPropsType {
 }
 
 function LectureContent(props: ContentPropsType) {
-  const { sendRequest } = useHttpClient();
-
-  const downloadFile = async (fileName: string) => {
-    const responseData = await sendRequest(
-      `${process.env.REACT_APP_BASE_URL}/lecture/download/${fileName}`
+  const downloadFile = async (fileName: string, index: number) => {
+    const responseData = await fetch(
+      `${process.env.REACT_APP_BASE_URL}/download/${fileName}`
     );
 
-    const file = responseData.blob();
-
-    // const url = window.URL.createObjectURL(new Blob([responseData]));
-    const url = window.URL.createObjectURL(file);
+    const blobData = await responseData.blob();
+    const url = window.URL.createObjectURL(blobData);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "test";
-    // link.setAttribute("download", "test");
+    link.download = `첨부 자료 ${index + 1}`;
     document.body.appendChild(link);
     link.click();
     link.remove();
@@ -45,7 +39,7 @@ function LectureContent(props: ContentPropsType) {
             <button
               className="flex items-center"
               onClick={() =>
-                downloadFile(file.split("uploads/attachments/")[1])
+                downloadFile(file.split("uploads/attachments/")[1], index)
               }
               key={index}
             >

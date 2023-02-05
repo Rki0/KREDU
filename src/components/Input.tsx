@@ -74,38 +74,37 @@ function Input(props: InputProps) {
   };
 
   return (
-    <div className="relative flex flex-col items-start mb-2">
+    <div className="flex flex-col items-start mb-2 ">
       <label htmlFor={props.id} className="font-bold">
         {props.label}
       </label>
 
-      <input
-        id={props.id}
-        type={
-          props.id === "email" || props.id === "nickname"
-            ? props.type
-            : showPswd
-            ? "text"
-            : "password"
-        }
-        placeholder={props.placeholder}
-        maxLength={props.maxLength}
-        minLength={props.minLength}
-        value={props.value}
-        onChange={changeHandler}
-        onBlur={touchHandler}
-        required
-        className="pl-2 font-semibold w-[250px] h-[40px] border-2 border-[#ffcdd2] rounded focus:border-[#e57373] focus:outline-none sm:w-[400px] md:w-[500px] lg:w-[500px]"
-      />
+      <div className="relative">
+        <input
+          id={props.id}
+          type={
+            props.id === "email" || props.id === "nickname"
+              ? props.type
+              : showPswd
+              ? "text"
+              : "password"
+          }
+          placeholder={props.placeholder}
+          maxLength={props.maxLength}
+          minLength={props.minLength}
+          value={props.value}
+          onChange={changeHandler}
+          onBlur={touchHandler}
+          required
+          className="pl-2 font-semibold w-[250px] h-[40px] border-2 border-[#ffcdd2] rounded focus:border-[#e57373] focus:outline-none sm:w-[400px] md:w-[500px] lg:w-[500px]"
+        />
 
-      {props.type === "password" && (
-        <div
-          onClick={showPswdHandler}
-          className="absolute top-9 right-3 lg:top-10"
-        >
-          {showPswd ? <BiShow /> : <BiHide />}
-        </div>
-      )}
+        {props.type === "password" && (
+          <div onClick={showPswdHandler} className="absolute top-3 right-3">
+            {showPswd ? <BiShow /> : <BiHide />}
+          </div>
+        )}
+      </div>
 
       {!inputState.isValid && inputState.isTouched && props.unValidText && (
         <UnValidText unValidText={props.unValidText} />
