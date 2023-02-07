@@ -4,10 +4,13 @@ import File from "./File";
 interface FileUploadProps {
   id: string;
   onInput: (id: string, value: any, isValid: boolean) => void;
+  initialValue?: any;
 }
 
 function FileUpload(props: FileUploadProps) {
-  const [file, setFile] = useState<any>([]);
+  const [file, setFile] = useState<any>(
+    props.initialValue ? props.initialValue : []
+  );
   const [isValid, setIsValid] = useState(false);
 
   const { id, onInput } = props;
@@ -63,6 +66,13 @@ function FileUpload(props: FileUploadProps) {
         </div>
 
         {file &&
+          !props.initialValue &&
+          file.map((item: any, index: number) => (
+            <File item={item} index={index} onDelete={onDelete} key={index} />
+          ))}
+
+        {file &&
+          props.initialValue &&
           file.map((item: any, index: number) => (
             <File item={item} index={index} onDelete={onDelete} key={index} />
           ))}
