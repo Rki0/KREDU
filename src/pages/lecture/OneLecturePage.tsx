@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import Layout from "../../layout/Layout";
@@ -8,6 +8,9 @@ import { useHttpClient } from "../../hoc/http-hook";
 import GoToLecturePage from "./GoToLecturePage";
 import LectureContent from "./LectureContent";
 import PostLikeButton from "../../components/PostLikeButton";
+import PostHandleDiv from "../../components/PostHandleDiv";
+import { AuthContext } from "../../context/auth-context";
+import CommentsDiv from "../../components/CommentsDiv";
 
 function OneLecturePage() {
   const [lecture, setLecture] = useState<any>();
@@ -15,6 +18,7 @@ function OneLecturePage() {
   const params = useParams();
   const lectureId = params.lectureId;
 
+  const auth = useContext(AuthContext);
   const { isLoading, sendRequest } = useHttpClient();
 
   useEffect(() => {
@@ -24,7 +28,6 @@ function OneLecturePage() {
           `${process.env.REACT_APP_BASE_URL}/lecture/${lectureId}`
         );
 
-        console.log(responseData.lecture);
         setLecture(responseData.lecture);
       } catch (err) {}
     };
@@ -53,11 +56,19 @@ function OneLecturePage() {
           {lecture && (
             <PostLikeButton like={lecture.like} lectureId={lecture._id} />
           )}
+
+          {lecture && auth.isLoggedIn && auth.manager && (
+            <PostHandleDiv lectureId={lecture._id} />
+          )}
         </article>
 
-        <CommentTextarea />
+        {lecture && (
+          <CommentsDiv lectureId={lecture._id} writer={lecture.writer} />
+        )}
 
-        <Comments />
+        {/* {lecture && <CommentTextarea lectureId={lecture._id} />}
+
+        <Comments /> */}
       </div>
     </Layout>
   );

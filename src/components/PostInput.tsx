@@ -11,10 +11,13 @@ interface PostInputProps {
   minLength?: number;
   required: boolean;
   isTextarea: boolean;
+  initialValue?: string;
 }
 
 function PostInput(props: PostInputProps) {
-  const [text, setText] = useState("");
+  const [text, setText] = useState(
+    props.initialValue ? props.initialValue : ""
+  );
 
   const textChangeHandler = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
