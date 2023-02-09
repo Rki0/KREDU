@@ -35,6 +35,9 @@ const WishWritePage = React.lazy(
 const LectureWritePage = React.lazy(
   () => import("./pages/lecture/LectureWritePage")
 );
+const LectureUpdatePage = React.lazy(
+  () => import("./pages/lecture/LectureUpdatePage")
+);
 
 function App() {
   const { token, login, logout, userId, manager } = useAuth();
@@ -74,6 +77,10 @@ function App() {
 
             <Route element={<ManagerRoute />}>
               <Route path="/lecture/write" element={<LectureWritePage />} />
+              <Route
+                path="/lecture/update/:lectureId"
+                element={<LectureUpdatePage />}
+              />
             </Route>
 
             <Route path="/*" element={<UnValidPage />} />
