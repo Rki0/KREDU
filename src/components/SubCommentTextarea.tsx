@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { useParams } from "react-router-dom";
 
 import { AuthContext } from "../context/auth-context";
 import { useHttpClient } from "../hoc/http-hook";
@@ -6,14 +7,18 @@ import getDate from "../utils/getDate";
 import CommentTextareaButton from "./CommentTextareaButton";
 
 interface CommentTextareaProps {
-  lectureId: string;
-  setCreatedComments: React.Dispatch<React.SetStateAction<any[]>>;
-  createdComments: any;
+  subCommentCreateHandler: () => void;
+  mainCommentId: string;
+  setSubComments: React.Dispatch<any>;
+  setCreatedSubComments: React.Dispatch<any>;
 }
 
-function CommentTextarea(props: CommentTextareaProps) {
+function SubCommentTextarea(props: CommentTextareaProps) {
   const auth = useContext(AuthContext);
   const { sendRequest } = useHttpClient();
+
+  const params = useParams();
+  const lectureId = params.lectureId;
 
   const [comment, setComment] = useState("");
 
@@ -33,12 +38,12 @@ function CommentTextarea(props: CommentTextareaProps) {
 
     try {
       const responseData = await sendRequest(
-        // 이 부분...isSubComment와 관련이 없는 부분인가? 확인 필요.
-        `${process.env.REACT_APP_BASE_URL}/lecture/comments/${props.lectureId}`,
+        `${process.env.REACT_APP_BASE_URL}/lecture/subcomments/${props.mainCommentId}`,
         "POST",
         JSON.stringify({
           text: comment,
           date,
+          lectureId,
         }),
         {
           "Content-Type": "application/json",
@@ -49,8 +54,11 @@ function CommentTextarea(props: CommentTextareaProps) {
       if (responseData) {
         setComment("");
 
-        props.setCreatedComments((prev: any) => [responseData, ...prev]);
-        // props.setComments([responseData, ...props.comments]);
+        props.setCreatedSubComments((prev: any) => [...prev, responseData]);
+
+        props.setSubComments((prev: any) => [...prev, responseData]);
+
+        props.subCommentCreateHandler();
       }
     } catch (err) {}
   };
@@ -61,9 +69,10 @@ function CommentTextarea(props: CommentTextareaProps) {
         <textarea
           placeholder={
             auth.isLoggedIn
-              ? "댓글 입력(최대 200자)"
+              ? "답글 입력(최대 200자)"
               : "로그인이 필요한 기능입니다."
           }
+          autoFocus
           minLength={1}
           maxLength={200}
           value={comment}
@@ -73,6 +82,12 @@ function CommentTextarea(props: CommentTextareaProps) {
         />
 
         <div className="flex justify-end">
+          <CommentTextareaButton
+            buttonType="reset"
+            clickHandler={props.subCommentCreateHandler}
+          >
+            취소
+          </CommentTextareaButton>
           <CommentTextareaButton buttonType="submit">
             등록
           </CommentTextareaButton>
@@ -82,4 +97,4 @@ function CommentTextarea(props: CommentTextareaProps) {
   );
 }
 
-export default CommentTextarea;
+export default SubCommentTextarea;

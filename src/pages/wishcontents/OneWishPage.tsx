@@ -19,7 +19,7 @@ function OneWishPage() {
 
   return (
     <Layout>
-      <div className="mt-4 px-2 md:px-4 lg:px-10">
+      <div className="px-2 mt-4 md:px-4 lg:px-10">
         <article className="mb-4 pb-2 border-b-2 border-[rgba(0,0,0,0.2)]">
           <div
             className="flex mb-2 rounded border-2 border-[#ffcdd2] w-full hover:bg-[#ffcdd2] hover:text-white hover:font-semibold hover:cursor-pointer"
@@ -60,9 +60,9 @@ function OneWishPage() {
           </section>
         </article>
 
-        <CommentTextarea />
+        {/* <CommentTextarea />
 
-        <Comments />
+        <Comments /> */}
       </div>
     </Layout>
   );

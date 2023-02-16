@@ -1,32 +1,44 @@
-import { useState } from "react";
-import {
-  BsFillChatLeftTextFill,
-  BsChatLeftText,
-  BsThreeDotsVertical,
-} from "react-icons/bs";
-import { BiLike } from "react-icons/bi";
-import { useAppSelector } from "../hooks/reducerhooks";
+import { useEffect, useState } from "react";
 
-interface CommentsDataType {
-  email: string;
-  nickname: string;
-  description: string;
-  like: number;
-  date: string;
-  comments: any | undefined;
-  outterCommentsId: number;
-}
+import { CommentsDataType } from "./Comments";
+import CommentUserProfileImg from "./CommentUserProfileImg";
+import CommentContent from "./CommentContent";
+import CommentLikeButton from "./CommentLikeButton";
+import SubCommentButton from "./SubCommentButton";
+import SubCommentTextarea from "./SubCommentTextarea";
+import SubCommentCreateButton from "./SubCommentCreateButton";
+import SubComments from "./SubComments";
+import CreatedSubComments from "./CreatedSubComments";
+import DotDivision from "./DotDivision";
 
-interface CommentsMapType {
-  item: CommentsDataType;
+interface CommentProps {
+  comment: CommentsDataType;
   writer: string;
+  deleteHandler: (id: string) => void;
+  isFixed?: boolean;
+  setFixedComment?: React.Dispatch<any>;
+  fixedCommentDeleteHandler?: (id: string) => void;
+  setIsDeleteFix?: React.Dispatch<React.SetStateAction<boolean>>;
+  setRawCommentsData?: React.Dispatch<any>;
 }
 
-function Comment({ item, writer }: CommentsMapType) {
+function Comment(props: CommentProps) {
   const [isCommentHover, setIsCommentHover] = useState(false);
   const [commentState, setCommentState] = useState(false);
+  const [wantUpdate, setWantUpdate] = useState(false);
+  const [wantCreateSubComment, setWantCreateSubComment] = useState(false);
+  const [wantShowSubComment, setWantShowSubComment] = useState(false);
+  const [subComments, setSubComments] = useState<any>([]);
+  const [createdSubComments, setCreatedSubComments] = useState<any>([]);
 
-  const userData = useAppSelector((state) => state.user.userData);
+  // props가 새로 넘어오면 그냥 생성된 답글을 초기화를 해버리는거지...
+  // 강제로 닫힘처리를 하는 느낌 ㅎㅎ;
+  // 해결은 됐는데, 답글 쓰고, 댓글을 쓰는 경우, 답글이 사라지는 매직
+  // 어쩔 수 없는게, createdSubComments는 이 컴포넌트에서 생성되는거라서
+  // props를 가져와서 반영시켜줄 수가 없어. 이게 가장 최선인듯.
+  useEffect(() => {
+    setCreatedSubComments([]);
+  }, [props]);
 
   const commentHoverHandler = () => {
     setIsCommentHover(true);
@@ -37,30 +49,34 @@ function Comment({ item, writer }: CommentsMapType) {
     setCommentState(false);
   };
 
-  const commentStateHandler = () => {
-    setCommentState(true);
+  const commentUpdateHandler = () => {
+    setWantUpdate(true);
+    setCommentState(false);
   };
 
-  const clickRevise = () => {
-    // 댓글 수정 후
-    // 댓글 수정본 api 통신으로 update
-    // 아...이래서 데이터 하나하나에 id가 있어야함.
-    // 없으면 데이터 찾기가 매우 곤란해짐.
-    console.log("revise");
+  const subCommentCreateHandler = () => {
+    setWantCreateSubComment((prev) => !prev);
   };
 
-  const clickDelete = () => {
-    console.log("delete");
+  const createdSubCommentDeleteHandler = (createdSubCommentId: string) => {
+    // setCreatedSubComments((prev: any) => {
+    //   console.log("prev", prev);
+
+    //   return prev.filter(
+    //     (createdSubComment: any) =>
+    //       createdSubComment._id !== createdSubCommentId
+    //   );
+    // });
+
+    setCreatedSubComments((prev: any) =>
+      prev.filter(
+        (createdSubComment: any) =>
+          createdSubComment._id !== createdSubCommentId
+      )
+    );
   };
 
-  const clickFix = () => {
-    console.log("fix");
-  };
-
-  // 태블릿 화면까지는 commentState 버튼을 그냥 보여줘야함(유튜브 참고)
-  // useEffect랑 addEventListner 사용해서 화면 크기를 측정한 뒤
-  // 태블릿 사이즈 이하라면 setIsCommentHover(true)로 해놓으면 될듯?
-  // 아니면 onMouseEnter, onMouseOver에 삼항연산자로 사이즈에 따라 함수 활성화를 조절해도 될듯
+  // 댓글 시간은 계산을 통해서 ~초 전, ~ 분 전, 이런 식으로 할 수 없을까?
 
   return (
     <div
@@ -68,86 +84,89 @@ function Comment({ item, writer }: CommentsMapType) {
       onMouseEnter={commentHoverHandler}
       onMouseLeave={commentHoverOutHandler}
     >
-      <div className="flex items-center">
-        <div>
-          <div className="overflow-hidden w-[40px] h-[40px] sm:w-[50px] sm:h-[50px] rounded-full mr-2">
-            <img
-              alt="user profile"
-              src={process.env.PUBLIC_URL + `/img/profile.jpg`}
-            />
-          </div>
-        </div>
+      <div className="flex">
+        <CommentUserProfileImg image={props.comment.image} />
 
-        <div className="flex flex-col w-full">
-          <div className="flex justify-between">
-            <div className="flex">
-              <h1
-                className={
-                  writer === item.email
-                    ? "bg-slate-300 rounded px-1 mr-4"
-                    : "mr-4"
-                }
-              >
-                {item.nickname}
-              </h1>
-
-              <p>{item.date}</p>
-            </div>
-
-            {item.email === userData.email ? (
-              isCommentHover ? (
-                <div className="relative">
-                  <button onClick={commentStateHandler}>
-                    <BsThreeDotsVertical />
-                  </button>
-
-                  {commentState ? (
-                    <nav className="absolute bg-slate-300 rounded overflow-hidden w-[70px] right-0">
-                      <ul className="flex flex-col text-center">
-                        <li
-                          className="hover:bg-slate-500 hover:cursor-pointer hover:text-white"
-                          onClick={clickRevise}
-                        >
-                          수정
-                        </li>
-                        <li
-                          className="hover:bg-slate-500 hover:cursor-pointer hover:text-white"
-                          onClick={clickDelete}
-                        >
-                          삭제
-                        </li>
-
-                        {userData.isAdmin ? (
-                          <li
-                            className="hover:bg-slate-500 hover:cursor-pointer hover:text-white"
-                            onClick={clickFix}
-                          >
-                            고정
-                          </li>
-                        ) : null}
-                      </ul>
-                    </nav>
-                  ) : null}
-                </div>
-              ) : null
-            ) : null}
-          </div>
-
-          <p>{item.description}</p>
-        </div>
+        <CommentContent
+          writer={props.writer}
+          creator={props.comment.creator}
+          date={props.comment.date}
+          nickname={props.comment.nickname}
+          text={props.comment.text}
+          commentId={props.comment._id}
+          wantUpdate={wantUpdate}
+          setWantUpdate={setWantUpdate}
+          isSubComment={false}
+          comment={props.comment}
+          commentState={commentState}
+          setCommentState={setCommentState}
+          setIsCommentHover={setIsCommentHover}
+          isCommentHover={isCommentHover}
+          deleteHandler={props.deleteHandler}
+          commentUpdateHandler={commentUpdateHandler}
+          setWantShowSubComment={setWantShowSubComment}
+          isFixed={props.isFixed}
+          setFixedComment={props.setFixedComment}
+          fixedCommentDeleteHandler={props.fixedCommentDeleteHandler}
+          setIsDeleteFix={props.setIsDeleteFix}
+          setRawCommentsData={props.setRawCommentsData}
+        />
       </div>
 
       <div className="flex ml-12 sm:ml-14">
-        <div className="flex mr-3 items-center">
-          <BiLike className="mr-1" />
-          <span>{item.like}</span>
-        </div>
+        <CommentLikeButton
+          commentId={props.comment._id}
+          likedUser={props.comment.likedUser}
+          isSubComment={false}
+          comment={props.comment}
+        />
 
-        <div className="flex items-center">
-          <BsChatLeftText className="mr-1" />
-          <span>{item.comments.length}</span>
-        </div>
+        <DotDivision />
+
+        <SubCommentCreateButton
+          subCommentCreateHandler={subCommentCreateHandler}
+        />
+
+        <DotDivision />
+
+        <SubCommentButton
+          subCommentsNum={props.comment.subComments.length}
+          setWantShowSubComment={setWantShowSubComment}
+          wantShowSubComment={wantShowSubComment}
+        />
       </div>
+
+      {wantCreateSubComment && (
+        <SubCommentTextarea
+          subCommentCreateHandler={subCommentCreateHandler}
+          mainCommentId={props.comment._id}
+          setSubComments={setSubComments}
+          setCreatedSubComments={setCreatedSubComments}
+        />
+      )}
+
+      {subComments && wantShowSubComment && (
+        <SubComments
+          mainCommentId={props.comment._id}
+          writer={props.writer}
+          setSubComments={setSubComments}
+          subComments={subComments}
+          createdSubComments={createdSubComments}
+          createdSubCommentsDeleteHandler={createdSubCommentDeleteHandler}
+          setCreatedSubComments={setCreatedSubComments}
+        />
+      )}
+
+      {createdSubComments && !wantShowSubComment && (
+        <CreatedSubComments
+          createdSubComments={createdSubComments}
+          writer={props.writer}
+          deleteHandler={createdSubCommentDeleteHandler}
+          setSubComments={setSubComments}
+          setCreatedSubComments={setCreatedSubComments}
+          mainCommentId={props.comment._id}
+        />
+      )}
     </div>
   );
 }
