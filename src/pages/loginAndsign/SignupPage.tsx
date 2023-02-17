@@ -46,8 +46,8 @@ function SignupPage() {
 
     try {
       await sendRequest(
-        "http://localhost:8080/api/users/signup",
-        // `${process.env.REACT_APP_BASE_URL}/users/signup`,
+        // "http://localhost:8080/api/users/signup",
+        `${process.env.REACT_APP_BASE_URL}/users/signup`,
         "POST",
         JSON.stringify({
           nickname: formState.inputs.nickname.value,

@@ -42,8 +42,8 @@ function MyPage() {
                 alt="profile"
                 src={
                   userInfo.image
-                    ? // ? process.env.REACT_APP_ASSET_URL + `${userInfo.image}`
-                      `http://localhost:8080/${userInfo.image}`
+                    ? // `http://localhost:8080/${userInfo.image}`
+                      `${process.env.REACT_APP_ASSET_URL}/${userInfo.image}`
                     : process.env.PUBLIC_URL + `/img/profile.jpg`
                 }
                 className="rounded-full mb-2 w-[200px] md:mb-4 h-[200px]"

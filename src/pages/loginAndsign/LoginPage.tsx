@@ -38,8 +38,8 @@ function LoginPage() {
 
     try {
       const responseData = await sendRequest(
-        "http://localhost:8080/api/users/login",
-        // `${process.env.REACT_APP_BASE_URL}/users/signup`,
+        // "http://localhost:8080/api/users/login",
+        `${process.env.REACT_APP_BASE_URL}/users/login`,
         "POST",
         JSON.stringify({
           email: formState.inputs.email.value,

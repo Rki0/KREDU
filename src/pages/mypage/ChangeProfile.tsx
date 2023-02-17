@@ -79,7 +79,8 @@ function ChangeProfile(props: profileProps) {
                 alt="profile"
                 src={
                   props.userProfile
-                    ? `http://localhost:8080/${props.userProfile}`
+                    ? // ? `http://localhost:8080/${props.userProfile}`
+                      `${process.env.REACT_APP_ASSET_URL}/${props.userProfile}`
                     : process.env.PUBLIC_URL + `/img/profile.jpg`
                 }
                 className="w-full h-full"

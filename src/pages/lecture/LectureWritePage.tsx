@@ -66,7 +66,8 @@ function LectureWritePage() {
 
     try {
       const response = await sendRequest(
-        "http://localhost:8080/api/lecture/write",
+        // "http://localhost:8080/api/lecture/write",
+        `${process.env.REACT_APP_BASE_URL}/lecture/write`,
         "POST",
         formData,
         {
