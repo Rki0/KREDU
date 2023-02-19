@@ -5,6 +5,7 @@ interface FileUploadProps {
   id: string;
   onInput: (id: string, value: any, isValid: boolean) => void;
   initialValue?: any;
+  purpose: string;
 }
 
 function FileUpload(props: FileUploadProps) {
@@ -45,7 +46,7 @@ function FileUpload(props: FileUploadProps) {
   return (
     <div>
       <div className="py-2 border-b-2 border-[#ffcdd2]">
-        <div className="mb-2">
+        <div>
           <span className="mr-2">첨부 파일 :</span>
 
           <label
@@ -68,13 +69,25 @@ function FileUpload(props: FileUploadProps) {
         {file &&
           !props.initialValue &&
           file.map((item: any, index: number) => (
-            <File item={item} index={index} onDelete={onDelete} key={index} />
+            <File
+              item={item}
+              index={index}
+              onDelete={onDelete}
+              key={index}
+              purpose={props.purpose}
+            />
           ))}
 
         {file &&
           props.initialValue &&
           file.map((item: any, index: number) => (
-            <File item={item} index={index} onDelete={onDelete} key={index} />
+            <File
+              item={item}
+              index={index}
+              onDelete={onDelete}
+              key={index}
+              purpose={props.purpose}
+            />
           ))}
       </div>
     </div>

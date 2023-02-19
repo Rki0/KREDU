@@ -3,7 +3,7 @@ import { BsFillPinFill } from "react-icons/bs";
 
 import CommentUpdateInput from "./CommentUpdateInput";
 import CommentStateButton from "./CommentStateButton";
-import { AuthContext } from "../context/auth-context";
+import { AuthContext } from "../../context/auth-context";
 
 interface CommentContentProps {
   writer: string;

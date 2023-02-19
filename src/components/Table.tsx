@@ -46,8 +46,8 @@ function Table(props: any) {
   //   commentSortFunc(dataList, commentSort);
   // };
 
-  const tableClickHandler = (lectureId: string) => {
-    navigate(`${lectureId}`);
+  const tableClickHandler = (postId: string) => {
+    navigate(`${postId}`);
   };
 
   // 페이지네이션
@@ -67,7 +67,7 @@ function Table(props: any) {
 
   return (
     <div>
-      {props.lectureList ? (
+      {props.dataList ? (
         <div className="flex flex-col items-center">
           <table className="table-fixed w-full border-separate rounded-[20px] overflow-hidden">
             <thead>
@@ -120,7 +120,7 @@ function Table(props: any) {
             </thead>
 
             <tbody>
-              {props.lectureList?.slice(offset, offset + limit).map(
+              {props.dataList?.slice(offset, offset + limit).map(
                 (
                   item: {
                     _id: string;
@@ -152,7 +152,7 @@ function Table(props: any) {
           </table>
 
           <Pagination
-            total={props.lectureList.length}
+            total={props.dataList.length}
             limit={limit}
             page={page}
             setPage={setPage}

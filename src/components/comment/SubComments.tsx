@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 
-import { useHttpClient } from "../hoc/http-hook";
 import SubComment from "./SubComment";
-import sortDateDescending from "../utils/sortDateDescending";
+import { useHttpClient } from "../../hoc/http-hook";
+import sortDateDescending from "../../utils/sortDateDescending";
 
 interface SubCommentsProps {
   mainCommentId: string;

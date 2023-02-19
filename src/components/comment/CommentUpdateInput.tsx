@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 
-import { AuthContext } from "../context/auth-context";
-import { useHttpClient } from "../hoc/http-hook";
+import { AuthContext } from "../../context/auth-context";
+import { useHttpClient } from "../../hoc/http-hook";
 import CommentTextareaButton from "./CommentTextareaButton";
 
 interface CommentUpdateInputProps {

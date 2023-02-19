@@ -1,13 +1,17 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-
 import { AiOutlineLeft } from "react-icons/ai";
 
-function GoToLecturePage() {
+interface GoToPreviousPageProps {
+  text: string;
+  to: string;
+}
+
+function GoToPreviousPage(props: GoToPreviousPageProps) {
   const navigate = useNavigate();
 
   const goBack = () => {
-    navigate("/lecture");
+    navigate(`${props.to}`);
   };
 
   return (
@@ -19,9 +23,9 @@ function GoToLecturePage() {
         <AiOutlineLeft />
       </button>
 
-      <p>강의 목록으로 돌아가기</p>
+      <p>{props.text}</p>
     </div>
   );
 }
 
-export default GoToLecturePage;
+export default GoToPreviousPage;

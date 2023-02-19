@@ -1,9 +1,9 @@
 import React, { useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 
-import { AuthContext } from "../context/auth-context";
-import { useHttpClient } from "../hoc/http-hook";
-import getDate from "../utils/getDate";
+import { AuthContext } from "../../context/auth-context";
+import { useHttpClient } from "../../hoc/http-hook";
+import getDate from "../../utils/getDate";
 import CommentTextareaButton from "./CommentTextareaButton";
 
 interface CommentTextareaProps {

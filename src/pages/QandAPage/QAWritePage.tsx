@@ -7,7 +7,6 @@ import Layout from "../../layout/Layout";
 import { useForm } from "../../hoc/useForm";
 import FileUpload from "../../components/FileUpload";
 import getDate from "../../utils/getDate";
-import getYoutubeLink from "../../utils/getYoutubeLink";
 import { useHttpClient } from "../../hoc/http-hook";
 import { AuthContext } from "../../context/auth-context";
 
@@ -49,6 +48,10 @@ function LectureWritePage() {
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (!auth.isLoggedIn) {
+      return alert("로그인이 필요한 기능입니다.");
+    }
+
     const formData = new FormData();
 
     formData.append("title", formState.inputs.title.value);
@@ -57,17 +60,13 @@ function LectureWritePage() {
     const submitTime = getDate();
     formData.append("date", submitTime);
 
-    const parsedLink = getYoutubeLink(formState.inputs.link.value);
-    formData.append("link", parsedLink);
-
     for (const file of formState.inputs.file.value) {
       formData.append("files", file);
     }
 
     try {
       const response = await sendRequest(
-        // "http://localhost:8080/api/lecture/write",
-        `${process.env.REACT_APP_BASE_URL}/lecture/write`,
+        `${process.env.REACT_APP_BASE_URL}/qa/write`,
         "POST",
         formData,
         {
@@ -76,8 +75,8 @@ function LectureWritePage() {
       );
 
       if (response.uploadSuccess) {
-        alert("강의 등록 성공!");
-        navigate("/lecture");
+        alert("질문 등록 성공!");
+        navigate("/qa");
       }
     } catch (err) {}
   };
@@ -87,7 +86,7 @@ function LectureWritePage() {
       <div className="px-2 mt-4 md:px-8 md:pt-8 lg:px-12 lg:pt-12 xl:px-32 xl:pt-20">
         <form className="flex flex-col" onSubmit={submitHandler}>
           <div className="py-1 border-b-2 border-[#ffcdd2]">
-            작성자 : 관리자
+            작성자 : {auth.nickname}
           </div>
 
           <PostInput
@@ -103,18 +102,7 @@ function LectureWritePage() {
             isTextarea={false}
           />
 
-          <PostInput
-            id="link"
-            label="영상 링크 :"
-            type="text"
-            placeholder="유튜브 영상 링크를 입력해주세요"
-            required
-            value={formState.inputs.link.value}
-            onInput={inputHandler}
-            isTextarea={false}
-          />
-
-          <FileUpload id="file" onInput={inputHandler} purpose="lecture" />
+          <FileUpload id="file" onInput={inputHandler} purpose="QandA" />
 
           <PostInput
             id="description"

@@ -14,38 +14,44 @@ const LecturePage = React.lazy(() => import("./pages/lecture/LecturePage"));
 const MyPage = React.lazy(() => import("./pages/mypage/MyPage"));
 const LoginPage = React.lazy(() => import("./pages/loginAndsign/LoginPage"));
 const SignupPage = React.lazy(() => import("./pages/loginAndsign/SignupPage"));
-const WishContentsPage = React.lazy(
-  () => import("./pages/wishcontents/WishContentsPage")
-);
+const QAPage = React.lazy(() => import("./pages/QandAPage/QAPage"));
 const OneLecturePage = React.lazy(
   () => import("./pages/lecture/OneLecturePage")
 );
-const OneWishPage = React.lazy(
-  () => import("./pages/wishcontents/OneWishPage")
-);
+const OneQAPage = React.lazy(() => import("./pages/QandAPage/OneQAPage"));
 const LikeLecturesPage = React.lazy(
   () => import("./pages/mypage/LikeLecturesPage")
 );
 const ReviseMyInfoPage = React.lazy(
   () => import("./pages/mypage/ReviseMyInfoPage")
 );
-const WishWritePage = React.lazy(
-  () => import("./pages/wishcontents/WishWritePage")
-);
+const QAWritePage = React.lazy(() => import("./pages/QandAPage/QAWritePage"));
 const LectureWritePage = React.lazy(
   () => import("./pages/lecture/LectureWritePage")
 );
 const LectureUpdatePage = React.lazy(
   () => import("./pages/lecture/LectureUpdatePage")
 );
+const QAUpdatePage = React.lazy(() => import("./pages/QandAPage/QAUpdatePage"));
+const MyQuestionPage = React.lazy(
+  () => import("./pages/mypage/MyQuestionsPage")
+);
 
 function App() {
-  const { token, login, logout, userId, manager } = useAuth();
+  const { token, login, logout, userId, manager, nickname } = useAuth();
 
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
       <AuthContext.Provider
-        value={{ isLoggedIn: !!token, token, userId, login, logout, manager }}
+        value={{
+          isLoggedIn: !!token,
+          token,
+          userId,
+          login,
+          logout,
+          manager,
+          nickname,
+        }}
       >
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
@@ -53,8 +59,8 @@ function App() {
               <Route path="/" element={<LandingPage />} />
               <Route path="/lecture" element={<LecturePage />} />
               <Route path="/lecture/:lectureId" element={<OneLecturePage />} />
-              <Route path="/wish" element={<WishContentsPage />} />
-              <Route path="/wish/:wishnum" element={<OneWishPage />} />
+              <Route path="/qa" element={<QAPage />} />
+              <Route path="/qa/:qaId" element={<OneQAPage />} />
             </Route>
 
             <Route element={<PrivateRoute />}>
@@ -67,7 +73,9 @@ function App() {
                 path="/mypage/revisemyinfo"
                 element={<ReviseMyInfoPage />}
               />
-              <Route path="/wish/write" element={<WishWritePage />} />
+              <Route path="/qa/write" element={<QAWritePage />} />
+              <Route path="/qa/update/:qaId" element={<QAUpdatePage />} />
+              <Route path="/mypage/questions" element={<MyQuestionPage />} />
             </Route>
 
             <Route element={<PublicRoute />}>

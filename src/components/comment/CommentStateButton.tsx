@@ -2,8 +2,8 @@ import React, { useContext } from "react";
 
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useParams } from "react-router-dom";
-import { AuthContext } from "../context/auth-context";
-import { useHttpClient } from "../hoc/http-hook";
+import { AuthContext } from "../../context/auth-context";
+import { useHttpClient } from "../../hoc/http-hook";
 
 interface CommentStateButtonProps {
   commentState: boolean;

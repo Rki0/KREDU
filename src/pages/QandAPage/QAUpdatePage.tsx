@@ -6,20 +6,16 @@ import PostInput from "../../components/PostInput";
 import Layout from "../../layout/Layout";
 import { useForm } from "../../hoc/useForm";
 import FileUpload from "../../components/FileUpload";
-import getYoutubeLink from "../../utils/getYoutubeLink";
 import { useHttpClient } from "../../hoc/http-hook";
 import { AuthContext } from "../../context/auth-context";
 
-function LectureUpdatePage() {
+function QAUpdatePage() {
   const auth = useContext(AuthContext);
   const [loadedData, setLoadedData] = useState<any>();
 
   const [formState, inputHandler, setFormData] = useForm(
     {
       title: {
-        value: "",
-      },
-      link: {
         value: "",
       },
       file: {
@@ -47,42 +43,36 @@ function LectureUpdatePage() {
   const { isLoading, sendRequest } = useHttpClient();
 
   const params = useParams();
-  const lectureId = params.lectureId;
+  const qaId = params.qaId;
 
   useEffect(() => {
-    // 결국, 수정할 때는 파일명을 내가 올린 것 그대로 보는게 좋기 때문에..
-    // 파일을 저장할 때는 이름을 그대로 사용하는게 좋을지도 모르겠다.
-    const loadLectureData = async () => {
+    const loadQAData = async () => {
       try {
         const responseData = await sendRequest(
-          `${process.env.REACT_APP_BASE_URL}/lecture/${lectureId}`
+          `${process.env.REACT_APP_BASE_URL}/qa/${qaId}`
         );
 
-        setLoadedData(responseData.lecture);
+        setLoadedData(responseData.qa);
 
-        if (!!responseData.lecture) {
+        if (!!responseData.qa) {
           setFormData({
             title: {
-              value: responseData.lecture.title,
+              value: responseData.qa.title,
               isValid: true,
             },
             description: {
-              value: responseData.lecture.description,
-              isValid: true,
-            },
-            link: {
-              value: responseData.lecture.link,
+              value: responseData.qa.description,
               isValid: true,
             },
             file: {
-              value: responseData.lecture.file,
+              value: responseData.qa.file,
             },
           });
         }
       } catch (err) {}
     };
 
-    loadLectureData();
+    loadQAData();
   }, []);
 
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -93,16 +83,13 @@ function LectureUpdatePage() {
     formData.append("title", formState.inputs.title.value);
     formData.append("description", formState.inputs.description.value);
 
-    const parsedLink = getYoutubeLink(formState.inputs.link.value);
-    formData.append("link", parsedLink);
-
     for (const file of formState.inputs.file.value) {
       formData.append("files", file);
     }
 
     try {
       const response = await sendRequest(
-        `${process.env.REACT_APP_BASE_URL}/lecture/update/${lectureId}`,
+        `${process.env.REACT_APP_BASE_URL}/qa/update/${qaId}`,
         "PATCH",
         formData,
         {
@@ -111,8 +98,8 @@ function LectureUpdatePage() {
       );
 
       if (response.updateSuccess) {
-        alert("강의 수정 성공!");
-        navigate(`/lecture/${lectureId}`);
+        alert("게시글 수정 성공!");
+        navigate(`/qa/${qaId}`);
       }
     } catch (err) {}
   };
@@ -123,7 +110,7 @@ function LectureUpdatePage() {
         <div className="px-2 mt-4 md:px-8 md:pt-8 lg:px-12 lg:pt-12 xl:px-32 xl:pt-20">
           <form className="flex flex-col" onSubmit={submitHandler}>
             <div className="py-1 border-b-2 border-[#ffcdd2]">
-              작성자 : 관리자
+              작성자 : {auth.nickname}
             </div>
 
             <PostInput
@@ -140,23 +127,11 @@ function LectureUpdatePage() {
               initialValue={formState.inputs.title.value}
             />
 
-            <PostInput
-              id="link"
-              label="영상 링크 :"
-              type="text"
-              placeholder="유튜브 영상 링크를 입력해주세요"
-              required
-              value={formState.inputs.link.value}
-              onInput={inputHandler}
-              isTextarea={false}
-              initialValue={formState.inputs.link.value}
-            />
-
             <FileUpload
               id="file"
               onInput={inputHandler}
               initialValue={formState.inputs.file.value}
-              purpose="lecture"
+              purpose="QandA"
             />
 
             <PostInput
@@ -191,4 +166,4 @@ function LectureUpdatePage() {
   );
 }
 
-export default LectureUpdatePage;
+export default QAUpdatePage;

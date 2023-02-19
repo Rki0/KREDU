@@ -1,21 +1,21 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
+import Layout from "../../layout/Layout";
 import { AuthContext } from "../../context/auth-context";
 import { useHttpClient } from "../../hoc/http-hook";
-import Layout from "../../layout/Layout";
 import MyPostList from "./MyPostList";
 
-function LikeLecturesPage() {
+function MyQuestionsPage() {
+  const [questions, setQuestions] = useState<any[]>([]);
+
   const auth = useContext(AuthContext);
   const { sendRequest } = useHttpClient();
 
-  const [likedLecture, setLikedLecture] = useState<any>();
-
   useEffect(() => {
-    const loadLikeLecture = async () => {
+    const fetchQuestions = async () => {
       try {
         const responseData = await sendRequest(
-          `${process.env.REACT_APP_BASE_URL}/users/likeLecture`,
+          `${process.env.REACT_APP_BASE_URL}/users/qas`,
           "GET",
           null,
           {
@@ -23,34 +23,34 @@ function LikeLecturesPage() {
           }
         );
 
-        setLikedLecture(responseData.likedLecture);
+        if (responseData.qas) {
+          setQuestions(responseData.qas);
+        }
       } catch (err) {}
     };
 
-    loadLikeLecture();
+    fetchQuestions();
   }, []);
 
   const deleteHandler = (id: string) => {
-    const deletedLikedLecture = likedLecture.filter(
-      (lecture: any) => lecture.id !== id
-    );
+    const deletedMyQA = questions.filter((lecture: any) => lecture.id !== id);
 
-    setLikedLecture(deletedLikedLecture);
+    setQuestions(deletedMyQA);
   };
 
   return (
     <Layout>
       <div className="px-2 mt-4 md:px-8 md:pt-8 lg:px-12 lg:pt-12 xl:px-32 xl:pt-20">
         <h1 className="font-bold text-xl border-b-2 border-[#ffa4a2] sm:text-2xl md:text-3xl">
-          좋아요 표시한 강의
+          내 질문
         </h1>
 
-        {likedLecture && (
+        {questions && (
           <article>
             <MyPostList
-              data={likedLecture}
+              data={questions}
               deleteHandler={deleteHandler}
-              purpose="lecture"
+              purpose="QandA"
             />
           </article>
         )}
@@ -59,4 +59,4 @@ function LikeLecturesPage() {
   );
 }
 
-export default LikeLecturesPage;
+export default MyQuestionsPage;

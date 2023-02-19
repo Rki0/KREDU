@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
-import { useHttpClient } from "../hoc/http-hook";
-import sortDateAscending from "../utils/sortDateAscending";
+import { useHttpClient } from "../../hoc/http-hook";
+import sortDateAscending from "../../utils/sortDateAscending";
 import Comments from "./Comments";
 import CommentTextarea from "./CommentTextarea";
 

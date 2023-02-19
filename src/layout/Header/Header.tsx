@@ -9,8 +9,8 @@ import NavBar from "./NavBar";
 
 const menuArr = [
   { title: "강의", key: 1, to: "/lecture" },
-  { title: "마이페이지", key: 2, to: "/mypage" },
-  { title: "질문 게시판", key: 3, to: "/wish" },
+  { title: "질문 게시판", key: 2, to: "/qa" },
+  { title: "마이페이지", key: 3, to: "/mypage" },
   { title: "로그인 / 회원가입", key: 4, to: "/login" },
 ];
 

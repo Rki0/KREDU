@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 
 import { AiFillLike, AiOutlineLike } from "react-icons/ai";
-import { AuthContext } from "../context/auth-context";
-import { useHttpClient } from "../hoc/http-hook";
+import { AuthContext } from "../../context/auth-context";
+import { useHttpClient } from "../../hoc/http-hook";
 
 interface CommentLikeButtonProps {
   commentId: string;
@@ -43,81 +43,55 @@ function CommentLikeButton(props: CommentLikeButtonProps) {
   }, [props]);
 
   const commentLikeHandler = async () => {
-    if (auth.isLoggedIn) {
-      try {
-        const responseData = await sendRequest(
-          `${process.env.REACT_APP_BASE_URL}/lecture/${
-            props.isSubComment ? "subcomments" : "comments"
-          }/like/auth/${props.commentId}`,
-          "PATCH",
-          null,
-          {
-            Authorization: "Bearer " + auth.token,
-          }
-        );
-
-        if (responseData.commentLikeSuccess) {
-          props.comment.likedUser.push(auth.userId);
-
-          setIsLiked(true);
-        }
-      } catch (err) {}
-    } else {
-      try {
-        const responseData = await sendRequest(
-          `${process.env.REACT_APP_BASE_URL}/lecture/${
-            props.isSubComment ? "subcomments" : "comments"
-          }/like/${props.commentId}`,
-          "PATCH",
-          null,
-          {}
-        );
-
-        if (responseData.commentLikeSuccess) {
-          setIsLiked(true);
-        }
-      } catch (err) {}
+    if (!auth.isLoggedIn) {
+      return alert("로그인이 필요한 기능입니다.");
     }
+
+    try {
+      const responseData = await sendRequest(
+        `${process.env.REACT_APP_BASE_URL}/lecture/${
+          props.isSubComment ? "subcomments" : "comments"
+        }/like/${props.commentId}`,
+        "PATCH",
+        null,
+        {
+          Authorization: "Bearer " + auth.token,
+        }
+      );
+
+      if (responseData.commentLikeSuccess) {
+        props.comment.likedUser.push(auth.userId);
+
+        setIsLiked(true);
+      }
+    } catch (err) {}
   };
 
   const commentDislikeHandler = async () => {
-    if (auth.isLoggedIn) {
-      try {
-        const responseData = await sendRequest(
-          `${process.env.REACT_APP_BASE_URL}/lecture/${
-            props.isSubComment ? "subcomments" : "comments"
-          }/dislike/auth/${props.commentId}`,
-          "PATCH",
-          null,
-          {
-            Authorization: "Bearer " + auth.token,
-          }
-        );
-
-        if (responseData.commentDislikeSuccess) {
-          props.comment.likedUser = props.comment.likedUser.filter(
-            (user: string) => user !== auth.userId
-          );
-
-          setIsLiked(false);
-        }
-      } catch (err) {}
-    } else {
-      try {
-        const responseData = await sendRequest(
-          `${process.env.REACT_APP_BASE_URL}/lecture/${
-            props.isSubComment ? "subcomments" : "comments"
-          }/dislike/${props.commentId}`,
-          "PATCH",
-          null,
-          {}
-        );
-
-        if (responseData.commentDislikeSuccess) {
-          setIsLiked(false);
-        }
-      } catch (err) {}
+    if (!auth.isLoggedIn) {
+      return alert("로그인이 필요한 기능입니다.");
     }
+
+    try {
+      const responseData = await sendRequest(
+        `${process.env.REACT_APP_BASE_URL}/lecture/${
+          props.isSubComment ? "subcomments" : "comments"
+        }/dislike/${props.commentId}`,
+        "PATCH",
+        null,
+        {
+          Authorization: "Bearer " + auth.token,
+        }
+      );
+
+      if (responseData.commentDislikeSuccess) {
+        props.comment.likedUser = props.comment.likedUser.filter(
+          (user: string) => user !== auth.userId
+        );
+
+        setIsLiked(false);
+      }
+    } catch (err) {}
   };
 
   return (

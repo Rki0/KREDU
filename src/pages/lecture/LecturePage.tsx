@@ -56,7 +56,7 @@ function LecturePage() {
 
         {isLoading && <div>강의 불러오는 중</div>}
 
-        {lectureList && <Table lectureList={lectureList} />}
+        {lectureList && <Table dataList={lectureList} />}
       </div>
     </Layout>
   );

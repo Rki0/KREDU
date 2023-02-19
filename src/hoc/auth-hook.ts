@@ -7,12 +7,20 @@ export const useAuth = () => {
   const [tokenExpirationTime, setTokenExpirationTime] = useState<any>();
   const [userId, setUserId] = useState<boolean | null>(false);
   const [manager, setManager] = useState<boolean | null>(null);
+  const [nickname, setNickname] = useState("");
 
   const login = useCallback(
-    (uid: any, token: any, expirationDate: any, isManager: boolean) => {
+    (
+      uid: any,
+      token: any,
+      expirationDate: any,
+      isManager: boolean,
+      nickname: string
+    ) => {
       setToken(token);
       setUserId(uid);
       setManager(isManager);
+      setNickname(nickname);
 
       const tokenExpirationDate =
         expirationDate || new Date(new Date().getTime() + 1000 * 60 * 60);
@@ -26,6 +34,7 @@ export const useAuth = () => {
           token,
           expiration: tokenExpirationDate.toISOString(),
           manager: isManager,
+          nickname,
         })
       );
     },
@@ -69,10 +78,11 @@ export const useAuth = () => {
         storedData.userId,
         storedData.token,
         new Date(storedData.expiration),
-        storedData.manager
+        storedData.manager,
+        storedData.nickname
       );
     }
   }, [login]);
 
-  return { token, login, logout, userId, manager };
+  return { token, login, logout, userId, manager, nickname };
 };

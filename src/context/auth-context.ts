@@ -7,4 +7,5 @@ export const AuthContext = createContext<boolean | null | any>({
   login: () => {},
   logout: () => {},
   manager: null,
+  nickname: null,
 });

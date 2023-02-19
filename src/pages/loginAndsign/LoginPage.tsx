@@ -54,7 +54,8 @@ function LoginPage() {
         responseData.userId,
         responseData.token,
         null,
-        responseData.manager
+        responseData.manager,
+        responseData.nickname
       );
 
       alert("로그인에 성공했습니다. 메인 페이지로 이동합니다.");

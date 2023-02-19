@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
 
 import Layout from "../../layout/Layout";
 import { useHttpClient } from "../../hoc/http-hook";
 import { AuthContext } from "../../context/auth-context";
+import MyPageStyledLinkTag from "../../components/MyPageStyledLinkTag";
 
 function MyPage() {
   const [userInfo, setUserInfo] = useState<any>();
@@ -42,8 +42,7 @@ function MyPage() {
                 alt="profile"
                 src={
                   userInfo.image
-                    ? // `http://localhost:8080/${userInfo.image}`
-                      `${process.env.REACT_APP_ASSET_URL}/${userInfo.image}`
+                    ? `${process.env.REACT_APP_ASSET_URL}/${userInfo.image}`
                     : process.env.PUBLIC_URL + `/img/profile.jpg`
                 }
                 className="rounded-full mb-2 w-[200px] md:mb-4 h-[200px]"
@@ -56,28 +55,18 @@ function MyPage() {
           </div>
 
           <div className="flex flex-col">
-            <Link
+            <MyPageStyledLinkTag
               to="/mypage/revisemyinfo"
-              className="text-lg hover:bg-[#ffa4a2] hover:text-white py-2 px-2 border-t-2 border-[#ffa4a2]"
-              state={{ userInfo }}
-            >
-              <div className="flex justify-between">
-                <span>개인정보 수정하기</span>
+              text="개인정보 수정하기"
+              data={userInfo}
+            />
 
-                <div>&gt;</div>
-              </div>
-            </Link>
-
-            <Link
+            <MyPageStyledLinkTag
               to="/mypage/likelectures"
-              className="text-lg hover:bg-[#ffa4a2] hover:text-white py-2 px-2 border-y-2 border-[#ffa4a2]"
-            >
-              <div className="flex justify-between">
-                <span>좋아요 표시한 강의</span>
+              text="좋아요 표시한 강의"
+            />
 
-                <div>&gt;</div>
-              </div>
-            </Link>
+            <MyPageStyledLinkTag to="/mypage/questions" text="내 질문" />
           </div>
         </section>
       )}

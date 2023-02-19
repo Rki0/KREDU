@@ -1,19 +1,20 @@
 import React, { useContext, useState } from "react";
-
 import { BsTrash, BsTrashFill } from "react-icons/bs";
+
 import { AuthContext } from "../context/auth-context";
 import { useHttpClient } from "../hoc/http-hook";
 
 interface TrashButtonProps {
-  lectureId: string;
+  postId: string;
   deleteHandler: (id: string) => void;
+  purpose: string;
 }
 
 function TrashButton(props: TrashButtonProps) {
   const auth = useContext(AuthContext);
   const { sendRequest } = useHttpClient();
 
-  const { lectureId, deleteHandler } = props;
+  const { postId, deleteHandler, purpose } = props;
   const [trashHover, setTrashHover] = useState(false);
 
   const trashHoverEnterHandler = () => {
@@ -25,20 +26,50 @@ function TrashButton(props: TrashButtonProps) {
   };
 
   const onClickHandler = async () => {
-    try {
-      const responseData = await sendRequest(
-        `${process.env.REACT_APP_BASE_URL}/users/dislikeLecture/${lectureId}`,
-        "DELETE",
-        null,
-        {
-          Authorization: "Bearer " + auth.token,
-        }
-      );
+    if (!auth.isLoggedIn) {
+      return alert("로그인이 필요한 기능입니다.");
+    }
 
-      if (responseData.deleteSuccess) {
-        deleteHandler(lectureId);
+    if (purpose === "QandA") {
+      const wantDelete = window.confirm("정말 게시글을 삭제하시겠습니까?");
+
+      if (!wantDelete) {
+        return;
       }
-    } catch (err) {}
+
+      try {
+        const responseData = await sendRequest(
+          `${process.env.REACT_APP_BASE_URL}/qa/${postId}`,
+          "DELETE",
+          null,
+          {
+            Authorization: "Bearer " + auth.token,
+          }
+        );
+
+        if (responseData.deleteSuccess) {
+          deleteHandler(postId);
+          alert("게시글 삭제 성공!");
+        }
+      } catch (err) {}
+    }
+
+    if (purpose === "lecture") {
+      try {
+        const responseData = await sendRequest(
+          `${process.env.REACT_APP_BASE_URL}/users/dislikeLecture/${postId}`,
+          "DELETE",
+          null,
+          {
+            Authorization: "Bearer " + auth.token,
+          }
+        );
+
+        if (responseData.deleteSuccess) {
+          deleteHandler(postId);
+        }
+      } catch (err) {}
+    }
   };
 
   return (
