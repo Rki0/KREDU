@@ -1,50 +1,97 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import Pagination from "./Pagination";
-import {
-  titleSortFunc,
-  dateSortFunc,
-  likeSortFunc,
-  commentSortFunc,
-} from "../function/Sort";
+import { PostSort } from "../utils/postSort";
 
-function Table(props: any) {
-  const [titleSort, setTitleSort] = useState(false);
-  const [dateSort, setDateSort] = useState(false);
-  const [likeSort, setLikeSort] = useState(false);
-  const [commentSort, setCommentSort] = useState(false);
+interface TableProps {
+  dataList: any;
+}
+
+function Table(props: TableProps) {
+  const [tableData, setTableData] = useState(props.dataList);
+
+  useEffect(() => {
+    setTableData(props.dataList);
+  }, [props]);
+
+  // 디폴트는 날짜 순서(게시물 등록 순서)
+  // true인 경우 타겟의 ascending인 상태 의미, false인 경우 타겟의 descending인 상태 의미
+  const [isTitleSort, setIsTitleSort] = useState(false);
+  const [isDateSort, setIsDateSort] = useState(false);
+  const [isLikeSort, setIsLikeSort] = useState(false);
+  const [isCommentSort, setIsCommentSort] = useState(false);
 
   const navigate = useNavigate();
 
-  // // 제목 정렬
-  // const titleSortHandler = () => {
-  //   setTitleSort((prev) => !prev);
+  // 제목 정렬
+  const titleSortHandler = () => {
+    if (isTitleSort) {
+      const sortedData = PostSort.titleDescending(tableData);
 
-  //   titleSortFunc(dataList, titleSort);
-  // };
+      setTableData(sortedData);
 
-  // // 날짜 정렬
-  // const dateSortHandler = () => {
-  //   setDateSort((prev) => !prev);
+      setIsTitleSort(false);
+    } else {
+      const sortedData = PostSort.titleAscending(tableData);
 
-  //   dateSortFunc(dataList, dateSort);
-  // };
+      setTableData(sortedData);
 
-  // // 좋아요 정렬
-  // const likeSortHandler = () => {
-  //   setLikeSort((prev) => !prev);
+      setIsTitleSort(true);
+    }
+  };
 
-  //   likeSortFunc(dataList, likeSort);
-  // };
+  // 날짜 정렬
+  const dateSortHandler = () => {
+    if (isDateSort) {
+      const sortedData = PostSort.dateDescending(tableData);
 
-  // // 댓글 정렬
-  // const commentSortHandler = () => {
-  //   setCommentSort((prev) => !prev);
+      setTableData(sortedData);
 
-  //   commentSortFunc(dataList, commentSort);
-  // };
+      setIsDateSort(false);
+    } else {
+      const sortedData = PostSort.dateAscending(tableData);
+
+      setTableData(sortedData);
+
+      setIsDateSort(true);
+    }
+  };
+
+  // 좋아요 정렬
+  const likeSortHandler = () => {
+    if (isLikeSort) {
+      const sortedData = PostSort.likeDescending(tableData);
+
+      setTableData(sortedData);
+
+      setIsLikeSort(false);
+    } else {
+      const sortedData = PostSort.likeAscending(tableData);
+
+      setTableData(sortedData);
+
+      setIsLikeSort(true);
+    }
+  };
+
+  // 댓글 정렬
+  const commentSortHandler = () => {
+    if (isCommentSort) {
+      const sortedData = PostSort.commentDescending(tableData);
+
+      setTableData(sortedData);
+
+      setIsCommentSort(false);
+    } else {
+      const sortedData = PostSort.commentAscending(tableData);
+
+      setTableData(sortedData);
+
+      setIsCommentSort(true);
+    }
+  };
 
   const tableClickHandler = (postId: string) => {
     navigate(`${postId}`);
@@ -67,7 +114,7 @@ function Table(props: any) {
 
   return (
     <div>
-      {props.dataList ? (
+      {tableData ? (
         <div className="flex flex-col items-center">
           <table className="table-fixed w-full border-separate rounded-[20px] overflow-hidden">
             <thead>
@@ -75,52 +122,51 @@ function Table(props: any) {
                 <th
                   scope="col"
                   className="relative w-[200px] hover:bg-[rgba(0,0,0,0.2)] 2sm:w-[225px] sm:w-[300px] md:w-[400px] lg:w-[500px]"
-                  // onClick={titleSortHandler}
-                  // onClick={() => titleSortHandler(dataList)}
+                  onClick={titleSortHandler}
                 >
                   제목
                   <div className="absolute top-1/3 right-2">
-                    {titleSort ? <AiFillCaretDown /> : <AiFillCaretUp />}
+                    {isTitleSort ? <AiFillCaretDown /> : <AiFillCaretUp />}
                   </div>
                 </th>
 
                 <th
                   scope="col"
                   className="relative hover:bg-[rgba(0,0,0,0.2)]"
-                  // onClick={dateSortHandler}
+                  onClick={dateSortHandler}
                 >
                   날짜
                   <div className="absolute top-1/3 right-2">
-                    {dateSort ? <AiFillCaretDown /> : <AiFillCaretUp />}
+                    {isDateSort ? <AiFillCaretDown /> : <AiFillCaretUp />}
                   </div>
                 </th>
 
                 <th
                   scope="col"
                   className="hidden relative hover:bg-[rgba(0,0,0,0.2)] 2sm:table-cell"
-                  // onClick={likeSortHandler}
+                  onClick={likeSortHandler}
                 >
                   좋아요
                   <div className="absolute top-1/3 right-2">
-                    {likeSort ? <AiFillCaretDown /> : <AiFillCaretUp />}
+                    {isLikeSort ? <AiFillCaretDown /> : <AiFillCaretUp />}
                   </div>
                 </th>
 
                 <th
                   scope="col"
                   className="hidden relative hover:bg-[rgba(0,0,0,0.2)] sm:table-cell"
-                  // onClick={commentSortHandler}
+                  onClick={commentSortHandler}
                 >
                   댓글
                   <div className="absolute top-1/3 right-2">
-                    {commentSort ? <AiFillCaretDown /> : <AiFillCaretUp />}
+                    {isCommentSort ? <AiFillCaretDown /> : <AiFillCaretUp />}
                   </div>
                 </th>
               </tr>
             </thead>
 
             <tbody>
-              {props.dataList?.slice(offset, offset + limit).map(
+              {tableData.slice(offset, offset + limit).map(
                 (
                   item: {
                     _id: string;
@@ -152,7 +198,7 @@ function Table(props: any) {
           </table>
 
           <Pagination
-            total={props.dataList.length}
+            total={tableData.length}
             limit={limit}
             page={page}
             setPage={setPage}

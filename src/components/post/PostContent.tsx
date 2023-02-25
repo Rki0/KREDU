@@ -2,12 +2,18 @@ import React from "react";
 
 import PostContentHeader from "./PostContentHeader";
 
+interface FilesType {
+  path: string;
+  name: string;
+  ext: string;
+}
+
 interface ContentPropsType {
   title: string;
   date: string;
   link?: string;
   description: string;
-  files: string[];
+  files: FilesType[];
   purpose: string;
   nickname?: string;
 }

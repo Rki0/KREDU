@@ -26,10 +26,24 @@ module.exports = {
           },
           to: { borderRight: "2px solid black" },
         },
+        spinner: {
+          from: {
+            width: "50px",
+            height: "50px",
+            opacity: 1,
+          },
+          to: {
+            width: "100px",
+            height: "100px",
+            opacity: 0,
+          },
+        },
       },
       animation: {
         typingCursor1: "typingCursor1 750ms linear 0ms 1",
         typingCursor2: "typingCursor2 1s ease-in-out 450ms infinite",
+        spinner1: "spinner 1.5s linear 0ms infinite",
+        spinner2: "spinner 1.5s linear 500ms infinite",
       },
     },
   },

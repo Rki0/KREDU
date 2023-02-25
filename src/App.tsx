@@ -8,6 +8,7 @@ import PrivateRoute from "./routes/PrivateRoute";
 import PublicRoute from "./routes/PublicRoute";
 import UnValidPage from "./pages/UnValid/UnValidPage";
 import ManagerRoute from "./routes/ManagerRoute";
+import PageLoadingSpinner from "./shared/PageLoadingSpinner";
 
 const LandingPage = React.lazy(() => import("./pages/landing/LandingPage"));
 const LecturePage = React.lazy(() => import("./pages/lecture/LecturePage"));
@@ -53,7 +54,7 @@ function App() {
           nickname,
         }}
       >
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<PageLoadingSpinner />}>
           <Routes>
             <Route element={<AnyRoute />}>
               <Route path="/" element={<LandingPage />} />

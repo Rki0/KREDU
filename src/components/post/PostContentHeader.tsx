@@ -2,27 +2,37 @@ import React from "react";
 
 import { AiOutlinePaperClip } from "react-icons/ai";
 
+interface FilesType {
+  path: string;
+  name: string;
+  ext: string;
+}
+
 interface PostContentHeaderProps {
   title: string;
   date: string;
-  files: any;
+  files: FilesType[];
   purpose: string;
   nickname?: string;
 }
 
 function PostContentHeader(props: PostContentHeaderProps) {
-  const downloadFile = async (fileName: string, index: number) => {
+  const downloadFile = async (file: FilesType, index: number) => {
+    const fileNameInDB = file.path.split(
+      `uploads/${props.purpose === "QandA" ? "questions" : "attachments"}/`
+    )[1];
+
     const responseData = await fetch(
       `${process.env.REACT_APP_BASE_URL}/download/${
         props.purpose === "lecture" ? "lecture" : "qa"
-      }/${fileName}`
+      }/${fileNameInDB}`
     );
 
     const blobData = await responseData.blob();
     const url = window.URL.createObjectURL(blobData);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `첨부 자료 ${index + 1}`;
+    link.download = `${file.name}`;
     document.body.appendChild(link);
     link.click();
     link.remove();
@@ -42,26 +52,12 @@ function PostContentHeader(props: PostContentHeaderProps) {
       {props.files.map((file: any, index: number) => (
         <button
           className="flex items-center"
-          onClick={() =>
-            downloadFile(
-              file.split(
-                `uploads/${
-                  props.purpose === "QandA" ? "questions" : "attachments"
-                }/`
-              )[1],
-              index
-            )
-          }
+          onClick={() => downloadFile(file, index)}
           key={index}
         >
           <AiOutlinePaperClip className="mr-2" />
-          {
-            file.split(
-              `uploads/${
-                props.purpose === "QandA" ? "questions" : "attachments"
-              }/`
-            )[1]
-          }
+
+          {`${file.name}.${file.ext}`}
         </button>
       ))}
     </div>
