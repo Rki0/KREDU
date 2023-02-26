@@ -10,10 +10,6 @@ interface SearchBarPropsType {
 function SearchBar(props: SearchBarPropsType) {
   const [searchKeyWord, setSearchKeyWord] = useState("");
 
-  // searchParams가 안 쓰이잖아요? 굳이 쓰고싶으면
-  // 부모 컴포넌트로 얘네를 옮기고
-  // setSearchParams만 이 컴포넌트로 가져와서 설정해주면 됨
-  // 부모 컴포넌트에서도 useSearchParams를 쓰고 있기 때문에, 거기서는 searchParams를 사용하면 되고 ㅇㅇ
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -21,12 +17,12 @@ function SearchBar(props: SearchBarPropsType) {
     setSearchKeyWord(e.target.value);
   };
 
-  const searchSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+  const searchSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!!searchKeyWord) {
       setSearchParams({
-        search: searchKeyWord,
+        keyword: searchKeyWord,
       });
     } else {
       navigate(`${props.purpose === "lecture" ? "/lecture" : "/qa"}`);

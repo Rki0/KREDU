@@ -13,7 +13,7 @@ function MyPostList(props: PostListProps) {
   const { data, deleteHandler, purpose } = props;
 
   return data.map((post: any, index: number) => (
-    <div
+    <article
       className="flex items-center justify-between border-b-2 border-[rgba(255,164,161,0.3)] hover:bg-[rgba(0,0,0,0.05)] px-2"
       key={post.id}
     >
@@ -44,7 +44,7 @@ function MyPostList(props: PostListProps) {
         deleteHandler={deleteHandler}
         purpose={purpose}
       />
-    </div>
+    </article>
   ));
 }
 

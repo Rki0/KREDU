@@ -4,12 +4,15 @@ import Layout from "../../layout/Layout";
 import { AuthContext } from "../../context/auth-context";
 import { useHttpClient } from "../../hoc/http-hook";
 import MyPostList from "./MyPostList";
+import MySearchBar from "../../components/MySearchBar";
+import EmptyPostAlarm from "../../components/post/EmptyPostAlarm";
 
 function MyQuestionsPage() {
-  const [questions, setQuestions] = useState<any[]>([]);
-
   const auth = useContext(AuthContext);
   const { sendRequest } = useHttpClient();
+
+  const [questions, setQuestions] = useState<any[]>([]);
+  const [filteredQuestions, setFilteredQuestions] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -25,6 +28,7 @@ function MyQuestionsPage() {
 
         if (responseData.qas) {
           setQuestions(responseData.qas);
+          setFilteredQuestions(responseData.qas);
         }
       } catch (err) {}
     };
@@ -33,9 +37,22 @@ function MyQuestionsPage() {
   }, []);
 
   const deleteHandler = (id: string) => {
-    const deletedMyQA = questions.filter((lecture: any) => lecture.id !== id);
+    const deletedMyQA = questions.filter((question: any) => question.id !== id);
+
+    const deletedFromFilteredQuestions = filteredQuestions.filter(
+      (question: any) => question.id !== id
+    );
 
     setQuestions(deletedMyQA);
+    setFilteredQuestions(deletedFromFilteredQuestions);
+  };
+
+  const filteringQuestions = (keyword: string) => {
+    const filterdData = questions.filter((item: any) =>
+      item.title.includes(keyword)
+    );
+
+    setFilteredQuestions(filterdData);
   };
 
   return (
@@ -45,15 +62,17 @@ function MyQuestionsPage() {
           내 질문
         </h1>
 
-        {questions && (
-          <article>
-            <MyPostList
-              data={questions}
-              deleteHandler={deleteHandler}
-              purpose="QandA"
-            />
-          </article>
+        <MySearchBar filtering={filteringQuestions} />
+
+        {filteredQuestions.length !== 0 && (
+          <MyPostList
+            data={filteredQuestions}
+            deleteHandler={deleteHandler}
+            purpose="QandA"
+          />
         )}
+
+        {filteredQuestions.length === 0 && <EmptyPostAlarm />}
       </div>
     </Layout>
   );

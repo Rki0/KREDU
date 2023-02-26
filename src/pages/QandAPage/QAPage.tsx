@@ -23,32 +23,16 @@ function QAPage() {
   const auth = useContext(AuthContext);
   const { sendRequest } = useHttpClient();
 
-  // useEffect(() => {
-  //   const fetchQA = async () => {
-  //     try {
-  //       const responseData = await sendRequest(
-  //         `${process.env.REACT_APP_BASE_URL}/qa`
-  //       );
-
-  //       if (responseData.qas) {
-  //         setQaList(responseData.qas.reverse());
-  //       }
-  //     } catch (err) {}
-  //   };
-
-  //   fetchQA();
-  // }, []);
-
   const location = useLocation();
 
   useEffect(() => {
-    const keyWord = decodeURI(location.search).split("search=")[1];
+    const keyWord = decodeURI(location.search);
 
     if (!!keyWord) {
       const fetchQA = async () => {
         try {
           const responseData = await sendRequest(
-            `${process.env.REACT_APP_BASE_URL}/qa/search/${keyWord}`
+            `${process.env.REACT_APP_BASE_URL}/qa/search/input${keyWord}`
           );
 
           if (responseData.searchedQAs) {

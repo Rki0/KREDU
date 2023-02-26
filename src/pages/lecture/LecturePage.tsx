@@ -27,13 +27,13 @@ function LecturePage() {
   const location = useLocation();
 
   useEffect(() => {
-    const keyWord = decodeURI(location.search).split("search=")[1];
+    const keyWord = decodeURI(location.search);
 
     if (!!keyWord) {
       const fetchLectures = async () => {
         try {
           const responseData = await sendRequest(
-            `${process.env.REACT_APP_BASE_URL}/lecture/search/${keyWord}`
+            `${process.env.REACT_APP_BASE_URL}/lecture/search/input${keyWord}`
           );
 
           setLectureList(responseData.searchedLectures.reverse());

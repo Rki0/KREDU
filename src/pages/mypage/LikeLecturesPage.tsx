@@ -1,4 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
+import MySearchBar from "../../components/MySearchBar";
+import EmptyPostAlarm from "../../components/post/EmptyPostAlarm";
 
 import { AuthContext } from "../../context/auth-context";
 import { useHttpClient } from "../../hoc/http-hook";
@@ -9,7 +11,8 @@ function LikeLecturesPage() {
   const auth = useContext(AuthContext);
   const { sendRequest } = useHttpClient();
 
-  const [likedLecture, setLikedLecture] = useState<any>();
+  const [likedLecture, setLikedLecture] = useState<any[]>([]);
+  const [filteredLikedLecture, setFilteredLikedLecture] = useState<any[]>([]);
 
   useEffect(() => {
     const loadLikeLecture = async () => {
@@ -24,6 +27,7 @@ function LikeLecturesPage() {
         );
 
         setLikedLecture(responseData.likedLecture);
+        setFilteredLikedLecture(responseData.likedLecture);
       } catch (err) {}
     };
 
@@ -31,11 +35,24 @@ function LikeLecturesPage() {
   }, []);
 
   const deleteHandler = (id: string) => {
-    const deletedLikedLecture = likedLecture.filter(
+    const deletedFromLikedLecture = likedLecture.filter(
       (lecture: any) => lecture.id !== id
     );
 
-    setLikedLecture(deletedLikedLecture);
+    const deletedFromFilteredLikedLecture = filteredLikedLecture.filter(
+      (lecture: any) => lecture.id !== id
+    );
+
+    setLikedLecture(deletedFromLikedLecture);
+    setFilteredLikedLecture(deletedFromFilteredLikedLecture);
+  };
+
+  const filteringLikedLecture = (keyword: string) => {
+    const filterdData = likedLecture.filter((item: any) =>
+      item.title.includes(keyword)
+    );
+
+    setFilteredLikedLecture(filterdData);
   };
 
   return (
@@ -45,15 +62,17 @@ function LikeLecturesPage() {
           좋아요 표시한 강의
         </h1>
 
-        {likedLecture && (
-          <article>
-            <MyPostList
-              data={likedLecture}
-              deleteHandler={deleteHandler}
-              purpose="lecture"
-            />
-          </article>
+        <MySearchBar filtering={filteringLikedLecture} />
+
+        {filteredLikedLecture.length !== 0 && (
+          <MyPostList
+            data={filteredLikedLecture}
+            deleteHandler={deleteHandler}
+            purpose="lecture"
+          />
         )}
+
+        {filteredLikedLecture.length === 0 && <EmptyPostAlarm />}
       </div>
     </Layout>
   );
