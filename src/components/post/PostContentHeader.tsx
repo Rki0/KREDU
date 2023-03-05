@@ -32,7 +32,7 @@ function PostContentHeader(props: PostContentHeaderProps) {
     const url = window.URL.createObjectURL(blobData);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `${file.name}`;
+    link.download = `${file.name}.${file.ext}`;
     document.body.appendChild(link);
     link.click();
     link.remove();

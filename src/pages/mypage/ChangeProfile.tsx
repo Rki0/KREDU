@@ -79,8 +79,7 @@ function ChangeProfile(props: profileProps) {
                 alt="profile"
                 src={
                   props.userProfile
-                    ? // ? `http://localhost:8080/${props.userProfile}`
-                      `${process.env.REACT_APP_ASSET_URL}/${props.userProfile}`
+                    ? `${process.env.REACT_APP_ASSET_URL}/${props.userProfile}`
                     : process.env.PUBLIC_URL + `/img/profile.jpg`
                 }
                 className="w-full h-full"
@@ -92,7 +91,7 @@ function ChangeProfile(props: profileProps) {
         <form className="flex justify-center w-full">
           <input
             type="file"
-            accept="image/*"
+            accept="image/jpg, image/jpeg, image/png"
             onChange={getNewProfile}
             ref={imgInputRef}
             className="hidden"

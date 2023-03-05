@@ -1,8 +1,9 @@
 import React from "react";
 
+import FileImg from "./FileImg";
 import PostContentHeader from "./PostContentHeader";
 
-interface FilesType {
+export interface FilesType {
   path: string;
   name: string;
   ext: string;
@@ -30,7 +31,8 @@ function PostContent(props: ContentPropsType) {
           nickname={props.nickname}
         />
 
-        {/* 질문 게시판에서는 파일 미리보기를 슬라이드 형태로 보여주는게 나으려나? */}
+        {props.purpose === "QandA" &&
+          props.files.map((file, index) => <FileImg file={file} key={index} />)}
 
         {props.purpose === "lecture" && props.link && (
           <div className="flex justify-center mb-4">
@@ -46,7 +48,15 @@ function PostContent(props: ContentPropsType) {
           </div>
         )}
 
-        <section className="mb-10">{props.description}</section>
+        {/* <section className="w-full mb-10">
+          <p className="whitespace-pre-wrap" style={{ wordWrap: "break-word" }}>
+            {props.description}
+          </p>
+        </section> */}
+
+        <section className="w-full mb-10">
+          <p className="whitespace-pre-wrap">{props.description}</p>
+        </section>
       </div>
     )
   );
