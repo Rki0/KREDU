@@ -97,7 +97,11 @@ function LectureUpdatePage() {
     formData.append("link", parsedLink);
 
     for (const file of formState.inputs.file.value) {
-      formData.append("files", file);
+      if (!!file.type) {
+        formData.append("files", file);
+      } else {
+        formData.append("initialFiles", file.path);
+      }
     }
 
     try {
