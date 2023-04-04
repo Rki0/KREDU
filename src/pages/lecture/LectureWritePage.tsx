@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Button from "../../components/Button";
@@ -10,6 +10,7 @@ import getDate from "../../utils/getDate";
 import getYoutubeLink from "../../utils/getYoutubeLink";
 import { useHttpClient } from "../../hoc/http-hook";
 import { AuthContext } from "../../context/auth-context";
+import Modal from "../../shared/Modal";
 
 function LectureWritePage() {
   const auth = useContext(AuthContext);
@@ -31,6 +32,8 @@ function LectureWritePage() {
     },
     null
   );
+
+  const [isModalOpen, seteIsModalOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -66,7 +69,6 @@ function LectureWritePage() {
 
     try {
       const response = await sendRequest(
-        // "http://localhost:8080/api/lecture/write",
         `${process.env.REACT_APP_BASE_URL}/lecture/write`,
         "POST",
         formData,
@@ -76,14 +78,35 @@ function LectureWritePage() {
       );
 
       if (response.uploadSuccess) {
-        alert("강의 등록 성공!");
-        navigate("/lecture");
+        seteIsModalOpen(true);
       }
     } catch (err) {}
   };
 
+  const closeModalHandler = () => {
+    seteIsModalOpen(false);
+    navigate("/lecture");
+  };
+
   return (
     <Layout>
+      {isModalOpen && (
+        <Modal
+          closeHandler={closeModalHandler}
+          text="강의 등록 성공!"
+          footer={
+            <>
+              <button
+                onClick={closeModalHandler}
+                className="px-2 font-semibold border-2 border-black rounded hover:cursor-pointer hover:text-white hover:bg-[#F8BBD0]"
+              >
+                확인
+              </button>
+            </>
+          }
+        />
+      )}
+
       <div className="px-2 mt-4 md:px-8 md:pt-8 lg:px-12 lg:pt-12 xl:px-32 xl:pt-20">
         <form className="flex flex-col" onSubmit={submitHandler}>
           <div className="py-1 border-b-2 border-[#ffcdd2]">

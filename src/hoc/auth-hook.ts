@@ -36,6 +36,10 @@ export const useAuth = () => {
           manager: isManager,
           nickname,
         })
+        // JSON.stringify({
+        //   token,
+        //   expiration: tokenExpirationDate.toISOString(),
+        // })
       );
     },
     []
