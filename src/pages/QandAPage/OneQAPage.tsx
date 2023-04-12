@@ -127,7 +127,7 @@ function OneWishPage() {
 
             <PostLikeButton />
 
-            {auth.isLoggedIn && auth.userId === qa.writer._id && (
+            {auth.isLoggedIn && auth.userId === qa?.writer._id && (
               <PostHandleDiv />
             )}
           </article>
