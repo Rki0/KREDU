@@ -112,7 +112,7 @@ function PostContentHeader() {
 
       <p>첨부 파일 : </p>
 
-      {postData.files?.map((file: any, index: number) => (
+      {postData.file?.map((file: any, index: number) => (
         <button
           className="flex items-center"
           onClick={() => downloadFile(file, index)}
