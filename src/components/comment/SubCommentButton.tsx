@@ -39,6 +39,7 @@ import React, { useContext } from "react";
 import { BsChatLeftText } from "react-icons/bs";
 import { BiUpArrow, BiDownArrow } from "react-icons/bi";
 import { CommentContext } from "../../context/comment-context";
+import { useTranslation } from "react-i18next";
 
 interface SubCommentButtonProps {
   setWantShowSubComment: React.Dispatch<React.SetStateAction<boolean>>;
@@ -52,13 +53,18 @@ function SubCommentButton(props: SubCommentButtonProps) {
     props.setWantShowSubComment((prev) => !prev);
   };
 
+  const { t } = useTranslation();
+
   return (
     <button className="flex items-center" onClick={clickHandler}>
       <BsChatLeftText className="mr-1" />
 
       <span className="mr-1">
-        {comment.subComments.length}개{" "}
-        {props.wantShowSubComment ? "접기" : "보기"}
+        {comment.subComments.length}
+        {t("comment.subcommentUnit")}
+        {props.wantShowSubComment
+          ? t("comment.hiddenSubcomment")
+          : t("comment.showSubComment")}
       </span>
 
       {props.wantShowSubComment ? (

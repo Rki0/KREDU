@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useTranslation } from "react-i18next";
 
 import Layout from "../../layout/Layout";
 import { useHttpClient } from "../../hoc/http-hook";
@@ -30,6 +31,8 @@ function MyPage() {
     getUserInfo();
   }, []);
 
+  const { t } = useTranslation();
+
   return (
     <Layout>
       {isLoading && <div>Loading for your info..</div>}
@@ -50,23 +53,25 @@ function MyPage() {
             </div>
 
             <p className="text-lg font-bold 2sm:text-xl sm:text-2xl md:text-3xl">
-              안녕하세요, {userInfo.nickname}님!
+              {t("mypage.hello")}
+              {userInfo.nickname}
+              {t("mypage.MrMs")}
             </p>
           </div>
 
           <div className="flex flex-col">
             <MyPageStyledLinkTag
               to="/mypage/revisemyinfo"
-              text="개인정보 수정하기"
+              text={t("mypage.revise")}
               data={userInfo}
             />
 
             <MyPageStyledLinkTag
               to="/mypage/likelectures"
-              text="좋아요 표시한 강의"
+              text={t("mypage.like")}
             />
 
-            <MyPageStyledLinkTag to="/mypage/questions" text="내 질문" />
+            <MyPageStyledLinkTag to="/mypage/questions" text={t("mypage.qa")} />
           </div>
         </section>
       )}

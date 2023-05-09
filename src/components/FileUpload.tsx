@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+
 import File from "./File";
 
 interface FileUploadProps {
@@ -43,17 +45,19 @@ function FileUpload(props: FileUploadProps) {
     setFile(deletedFile);
   };
 
+  const { t } = useTranslation();
+
   return (
     <div>
       <div className="py-2 border-b-2 border-[#ffcdd2]">
         <div>
-          <span className="mr-2">첨부 파일 :</span>
+          <span className="mr-2">{t("file.file")}</span>
 
           <label
             className="mr-2 rounded-lg p-1 border-2 border-[#ffcdd2] hover:bg-[#ffcdd2] hover:text-white hover:font-semibold hover:cursor-pointer"
             htmlFor={props.id}
           >
-            + 파일 추가하기
+            + {t("file.fileButton")}
           </label>
 
           <input

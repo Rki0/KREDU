@@ -10,6 +10,7 @@ import {
 } from "../../utils/validators";
 import { useHttpClient } from "../../hoc/http-hook";
 import { AuthContext } from "../../context/auth-context";
+import { useTranslation } from "react-i18next";
 
 function ChangePassword() {
   const auth = useContext(AuthContext);
@@ -92,17 +93,21 @@ function ChangePassword() {
     } catch (err) {}
   };
 
+  const { t } = useTranslation();
+
   return (
     <>
       <div>
-        <h2 className="mb-2 font-semibold">비밀번호 변경</h2>
+        <h2 className="mb-2 font-semibold">
+          {t("mypageRevise.password.title")}
+        </h2>
         {isPswdRevise ? (
           <form className="flex flex-col" onSubmit={revisedPswdSubmitHandler}>
             <Input
               id="currPassword"
-              label="현재 비밀번호"
+              label={t("mypageRevise.password.currPswd")}
               type="password"
-              placeholder="현재 비밀번호를 입력해주세요"
+              placeholder={t("mypageRevise.password.currPswdPlaceholder")}
               minLength={8}
               maxLength={12}
               value={formState.inputs.currPassword.value}
@@ -114,9 +119,9 @@ function ChangePassword() {
 
             <Input
               id="password"
-              label="새로운 비밀번호"
+              label={t("mypageRevise.password.newPswd")}
               type="password"
-              placeholder="새로운 비밀번호 입력(8 ~ 12자)"
+              placeholder={t("mypageRevise.password.newPswdPlaceholder")}
               minLength={8}
               maxLength={12}
               value={formState.inputs.password.value}
@@ -128,9 +133,9 @@ function ChangePassword() {
 
             <Input
               id="passwordCheck"
-              label="비밀번호 확인"
+              label={t("mypageRevise.password.checkPswd")}
               type="password"
-              placeholder="비밀번호를 다시 확인해주세요"
+              placeholder={t("mypageRevise.password.checkPswdPlaceholder")}
               minLength={8}
               maxLength={12}
               value={formState.inputs.passwordCheck.value}
@@ -150,13 +155,13 @@ function ChangePassword() {
                 onClick={pswdReviseHandler}
                 className="border-2 p-1 mr-2 text-sm rounded-md border-[#ffa4a2] hover:bg-[#ffa4a2] hover:text-white"
               >
-                취소
+                {t("mypageRevise.password.cancel")}
               </button>
               <button
                 type="submit"
                 className="border-2 p-1 mr-2 text-sm rounded-md border-[#ffa4a2] hover:bg-[#ffa4a2] hover:text-white"
               >
-                변경
+                {t("mypageRevise.password.submit")}
               </button>
             </div>
           </form>
@@ -166,7 +171,7 @@ function ChangePassword() {
             onClick={pswdReviseHandler}
             className="border-2 p-1 mr-2 text-sm rounded-md border-[#ffa4a2] hover:bg-[#ffa4a2] hover:text-white"
           >
-            비밀번호 변경하기
+            {t("mypageRevise.password.button")}
           </button>
         )}
       </div>

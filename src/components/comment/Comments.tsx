@@ -84,6 +84,8 @@
 
 // export default Comments;
 
+import { useTranslation } from "react-i18next";
+
 import { CommentContext } from "../../context/comment-context";
 import Comment from "./Comment";
 import CreatedComments from "./CreatedComments";
@@ -114,16 +116,20 @@ interface CommentsProps {
 }
 
 function Comments(props: CommentsProps) {
+  const { t } = useTranslation();
+
   return (
     <article className="my-4">
       <div className="border-b-2 border-[rgba(0,0,0,0.15)] flex justify-between">
-        <h1>댓글수 {props.commentsData.length}</h1>
+        <h1>
+          {t("comment.amount")} {props.commentsData.length}
+        </h1>
 
         {/* 최신순 정렬에 필요한 것 : 날짜 데이터 - 만들어둔 함수로 파싱해서 비교 */}
         {/* 인기순 정렬에 필요한 것 : 좋아요 수 */}
         <select>
-          <option value="최신순">최신순</option>
-          <option value="최신순">인기순</option>
+          <option value="최신순">{t("comment.sortDate")}</option>
+          <option value="최신순">{t("comment.sortLike")}</option>
         </select>
       </div>
 

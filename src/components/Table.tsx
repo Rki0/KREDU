@@ -1,9 +1,11 @@
 import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
+import { useTranslation } from "react-i18next";
+
 import Pagination from "./Pagination";
 import { PostSort } from "../utils/postSort";
+
 
 interface TableProps {
   dataList: any;
@@ -112,6 +114,8 @@ function Table(props: TableProps) {
     return (page - 1) * limit;
   }, [page]);
 
+  const { t } = useTranslation();
+
   return (
     <div>
       {tableData ? (
@@ -124,7 +128,7 @@ function Table(props: TableProps) {
                   className="relative w-[200px] hover:bg-[rgba(0,0,0,0.2)] 2sm:w-[225px] sm:w-[300px] md:w-[400px] lg:w-[500px]"
                   onClick={titleSortHandler}
                 >
-                  제목
+                  {t("table.title")}
                   <div className="absolute top-1/3 right-2">
                     {isTitleSort ? <AiFillCaretDown /> : <AiFillCaretUp />}
                   </div>
@@ -135,7 +139,7 @@ function Table(props: TableProps) {
                   className="relative hover:bg-[rgba(0,0,0,0.2)]"
                   onClick={dateSortHandler}
                 >
-                  날짜
+                  {t("table.date")}
                   <div className="absolute top-1/3 right-2">
                     {isDateSort ? <AiFillCaretDown /> : <AiFillCaretUp />}
                   </div>
@@ -146,7 +150,7 @@ function Table(props: TableProps) {
                   className="hidden relative hover:bg-[rgba(0,0,0,0.2)] 2sm:table-cell"
                   onClick={likeSortHandler}
                 >
-                  좋아요
+                  {t("table.like")}
                   <div className="absolute top-1/3 right-2">
                     {isLikeSort ? <AiFillCaretDown /> : <AiFillCaretUp />}
                   </div>
@@ -157,7 +161,7 @@ function Table(props: TableProps) {
                   className="hidden relative hover:bg-[rgba(0,0,0,0.2)] sm:table-cell"
                   onClick={commentSortHandler}
                 >
-                  댓글
+                  {t("table.comment")}
                   <div className="absolute top-1/3 right-2">
                     {isCommentSort ? <AiFillCaretDown /> : <AiFillCaretUp />}
                   </div>

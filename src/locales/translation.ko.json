@@ -1,0 +1,125 @@
+{
+  "header": {
+    "lecture": "강의",
+    "qa": "질문 게시판",
+    "mypage": "마이 페이지",
+    "auth": "로그인 / 회원가입",
+    "channel": "적당히 한국어",
+    "logout": "로그아웃"
+  },
+  "table": {
+    "title": "제목",
+    "date": "게시일",
+    "like": "좋아요",
+    "comment": "댓글"
+  },
+  "lecture": {
+    "searchPlaceholder": "강의 제목을 입력해주세요.",
+    "backToTable": "강의 목록으로 돌아가기"
+  },
+  "qa": {
+    "searchPlaceholder": "키워드를 입력해주세요.",
+    "backToTable": "질문 목록으로 돌아가기",
+    "write": {
+      "writer": "작성자 : ",
+      "title": "제목 :",
+      "titlePlaceholder": "제목을 입력하세요(최소 1자, 최대 30자)",
+      "inputPlaceholder": "내용을 입력하세요(최소 1자, 최대 1000자)",
+      "cancel": "취소",
+      "submit": "등록"
+    }
+  },
+  "file": {
+    "file": "첨부 파일 :",
+    "fileButton": "파일 추가하기"
+  },
+  "post": {
+    "title": "제목",
+    "date": "게시일",
+    "file": "첨부 파일",
+    "writer": "작성자"
+  },
+  "comment": {
+    "placeholder": "댓글 입력(최대 200자)",
+    "pleaseLogin": "로그인이 필요한 기능입니다.",
+    "submit": "등록",
+    "amount": "댓글",
+    "sortDate": "최신순",
+    "sortLike": "인기순",
+    "createSubcomment": "답글",
+    "subcommentUnit": "개 ",
+    "showSubComment": "보기",
+    "hiddenSubcomment": "접기",
+    "subcomment": {
+      "cancel": "취소",
+      "submit": "등록"
+    }
+  },
+  "login": {
+    "email": "이메일",
+    "password": "비밀번호",
+    "emailPlaceholder": "이메일을 입력해주세요.",
+    "passwordPlaceholder": "비밀번호를 입력해주세요.",
+    "loginBtn": "로그인",
+    "moveTo": "회원가입",
+    "askSignin": "아직 회원가입을 하지 않으셨나요?"
+  },
+  "signin": {
+    "nickname": "닉네임",
+    "email": "이메일",
+    "password": "비밀번호",
+    "passwordCheck": "비밀번호 확인",
+    "nicknamePlaceholder": "닉네임 입력(최대 10자)",
+    "emailPlaceholder": "이메일을 입력",
+    "passwordPlaceholder": "비밀번호 입력(8 ~ 12자)",
+    "passwordCheckPlaceholder": "비밀번호를 다시 확인해주세요.",
+    "signinBtn": "회원가입",
+    "moveTo": "로그인",
+    "askSignin": "이미 회원가입을 하셨나요?"
+  },
+  "auth": {
+    "then": "그렇다면 ",
+    "go": "으로 이동해주세요."
+  },
+  "mypage": {
+    "hello": "안녕하세요, ",
+    "MrMs": "님!",
+    "revise": "개인정보 수정하기",
+    "like": "좋아요 표시한 강의",
+    "qa": "내 질문",
+    "placeholder": "키워드를 입력해주세요."
+  },
+  "mypageRevise": {
+    "title": "개인정보 수정",
+    "profile": {
+      "title": "프로필 사진",
+      "button": "변경하기"
+    },
+    "nickname": {
+      "title": "닉네임",
+      "button": "수정하기",
+      "cancel": "취소",
+      "submit": "등록",
+      "placeholder": "10자 이내"
+    },
+    "password": {
+      "title": "비밀번호 변경",
+      "button": "변경하기",
+      "currPswd": "현재 비밀번호",
+      "currPswdPlaceholder": "현재 비밀번호를 입력해주세요.",
+      "newPswd": "새로운 비밀번호",
+      "newPswdPlaceholder": "새로운 비밀번호 입력(8 ~ 12자)",
+      "checkPswd": "비밀번호 확인",
+      "checkPswdPlaceholder": "비밀번호를 다시 확인해주세요.",
+      "cancel": "취소",
+      "submit": "변경"
+    }
+  },
+  "mypageLike": {
+    "title": "좋아요 표시한 강의"
+  },
+  "mypageQA": {
+    "title": "내 질문"
+  },
+  "empty": "데이터가 없습니다."
+}

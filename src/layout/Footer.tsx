@@ -1,12 +1,13 @@
 import React from "react";
-
 import { AiOutlineYoutube, AiOutlineInstagram } from "react-icons/ai";
 import { SiNotion } from "react-icons/si";
 
 function Footer() {
   return (
     <footer className="flex flex-col items-center py-4 mt-4 border-t-2 lg:col-start-2 lg:col-end-6">
-      <p className="mb-2">이 홈페이지의 모든 저작권은 기영에게 있습니다.</p>
+      <p className="mb-2">
+        Copyright © 2023. Rki0(Pak-Kiyoung). All rights reserved.
+      </p>
 
       <div className="flex items-center justify-between w-2/5 text-3xl">
         <a

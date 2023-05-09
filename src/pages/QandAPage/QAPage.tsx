@@ -7,6 +7,7 @@ import { useHttpClient } from "../../hoc/http-hook";
 import { AuthContext } from "../../context/auth-context";
 import SearchBar from "../../components/SearchBar";
 import EmptyPostAlarm from "../../components/post/EmptyPostAlarm";
+import { useTranslation } from "react-i18next";
 
 interface QAListType {
   _id: string | undefined;
@@ -59,12 +60,14 @@ function QAPage() {
     }
   }, [location]);
 
+  const { t } = useTranslation();
+
   return (
     <Layout>
       <div className="flex flex-col items-center px-2 mt-4 md:px-4 lg:px-10">
         <div className="w-full border-b-2 mb-2 pb-1 border-[#ffa4a2] flex justify-between items-center">
           <h1 className="text-xl font-bold sm:text-2xl md:text-3xl">
-            질문 게시판
+            {t("header.qa")}
           </h1>
 
           {auth.isLoggedIn && (
@@ -77,7 +80,7 @@ function QAPage() {
           )}
         </div>
 
-        <SearchBar placeholder="키워드를 입력해주세요." purpose="QandA" />
+        <SearchBar placeholder={t("qa.searchPlaceholder")} purpose="QandA" />
 
         {qaList?.length === 0 && <EmptyPostAlarm />}
 

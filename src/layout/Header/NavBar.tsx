@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import { AuthContext } from "../../context/auth-context";
 
@@ -16,6 +17,8 @@ interface PropsType {
 
 function NavBar({ menuArr, logoutHandler }: PropsType) {
   const auth = useContext(AuthContext);
+
+  const { t } = useTranslation();
 
   return (
     <nav className="hidden w-full text-xl text-center lg:block h-1/2">
@@ -41,7 +44,7 @@ function NavBar({ menuArr, logoutHandler }: PropsType) {
           onClick={logoutHandler}
           className="text-center w-full py-3 px-3 active:bg-[#ffa4a2] hover:bg-[#cb9ca1]"
         >
-          로그아웃
+          {t("header.logout")}
         </button>
       ) : null}
     </nav>

@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import Layout from "../../layout/Layout";
 import Table from "../../components/Table";
@@ -56,13 +57,17 @@ function LecturePage() {
     }
   }, [location]);
 
+  const { t } = useTranslation();
+
   return (
     <Layout>
       {isLoading && <FetchLoadingSpinner />}
 
       <div className="flex flex-col items-center px-2 mt-4 md:px-4 lg:px-10">
         <div className="w-full border-b-2 mb-2 pb-1 border-[#ffa4a2] flex justify-between items-center">
-          <h1 className="text-xl font-bold sm:text-2xl md:text-3xl">강의</h1>
+          <h1 className="text-xl font-bold sm:text-2xl md:text-3xl">
+            {t("header.lecture")}
+          </h1>
 
           {auth.manager ? (
             <Link
@@ -74,7 +79,10 @@ function LecturePage() {
           ) : null}
         </div>
 
-        <SearchBar placeholder="강의 제목을 검색해보세요" purpose="lecture" />
+        <SearchBar
+          placeholder={t("lecture.searchPlaceholder")}
+          purpose="lecture"
+        />
 
         {isLoading && <div>강의 불러오는 중</div>}
 

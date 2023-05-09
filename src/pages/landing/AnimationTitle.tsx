@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+
 import { useInterval } from "../../hooks/useInterval";
 
 function AnimationTitle() {

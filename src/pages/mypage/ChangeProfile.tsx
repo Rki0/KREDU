@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useContext } from "react";
 
 import { AuthContext } from "../../context/auth-context";
 import { useHttpClient } from "../../hoc/http-hook";
+import { useTranslation } from "react-i18next";
 
 interface profileProps {
   userProfile: string;
@@ -65,10 +66,14 @@ function ChangeProfile(props: profileProps) {
     } catch (err) {}
   };
 
+  const { t } = useTranslation();
+
   return (
     <>
       <div className="border-b-2 pb-2 border-[rgba(255,164,161,0.3)] mb-2">
-        <h2 className="mb-2 font-semibold">프로필 사진</h2>
+        <h2 className="mb-2 font-semibold">
+          {t("mypageRevise.profile.title")}
+        </h2>
 
         <div className="flex justify-center mb-2">
           <div className="border-2 border-transparent rounded-full w-[150px] h-[150px] overflow-hidden">
@@ -102,7 +107,7 @@ function ChangeProfile(props: profileProps) {
             onClick={changeProfile}
             className="border-2 p-1 mr-2 text-sm rounded-md border-[#ffa4a2] hover:bg-[#ffa4a2] hover:text-white"
           >
-            변경하기
+            {t("mypageRevise.profile.button")}
           </button>
         </form>
       </div>

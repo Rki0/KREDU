@@ -14,6 +14,7 @@ import {
 import Button from "../../components/Button";
 import PassToAnotherAuth from "./PassToAnotherAuth";
 import { useHttpClient } from "../../hoc/http-hook";
+import { useTranslation } from "react-i18next";
 
 function SignupPage() {
   const { sendRequest } = useHttpClient();
@@ -64,6 +65,8 @@ function SignupPage() {
     } catch (err) {}
   };
 
+  const { t } = useTranslation();
+
   return (
     <Layout>
       <div className="flex flex-col items-center mt-4 lg:mt-32 xl:mt-52">
@@ -78,8 +81,8 @@ function SignupPage() {
           <Input
             id="nickname"
             type="text"
-            label="닉네임"
-            placeholder="닉네임 입력(최대 10자)"
+            label={t("signin.nickname")}
+            placeholder={t("signin.nicknamePlaceholder")}
             value={formState.inputs.nickname.value}
             onInput={inputHandler}
             maxLength={10}
@@ -91,8 +94,8 @@ function SignupPage() {
           <Input
             id="email"
             type="email"
-            label="이메일"
-            placeholder="이메일 입력"
+            label={t("signin.email")}
+            placeholder={t("signin.emailPlaceholder")}
             value={formState.inputs.email.value}
             onInput={inputHandler}
             validators={[VALIDATOR_EMAIL()]}
@@ -102,9 +105,9 @@ function SignupPage() {
 
           <Input
             id="password"
-            label="비밀번호"
+            label={t("signin.password")}
             type="password"
-            placeholder="비밀번호 입력(8 ~ 12자)"
+            placeholder={t("signin.passwordPlaceholder")}
             minLength={8}
             maxLength={12}
             value={formState.inputs.password.value}
@@ -116,9 +119,9 @@ function SignupPage() {
 
           <Input
             id="passwordCheck"
-            label="비밀번호 확인"
+            label={t("signin.passwordCheck")}
             type="password"
-            placeholder="비밀번호를 다시 확인해주세요"
+            placeholder={t("signin.passwordCheckPlaceholder")}
             minLength={8}
             maxLength={12}
             value={formState.inputs.passwordCheck.value}
@@ -133,7 +136,7 @@ function SignupPage() {
           />
 
           <Button isValid={formState.isValid} submitMode={true}>
-            회원가입
+            {t("signin.signinBtn")}
           </Button>
         </form>
 

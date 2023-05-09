@@ -87,6 +87,7 @@ import CommentsDiv from "../../components/comment/CommentsDiv";
 import GoToPreviousPage from "../../components/GoToPreviousPage";
 import PostContent from "../../components/post/PostContent";
 import { PostContext } from "../../context/post-context";
+import { useTranslation } from "react-i18next";
 
 function OneLecturePage() {
   const [lecture, setLecture] = useState<any>();
@@ -111,6 +112,8 @@ function OneLecturePage() {
     fetchLecture();
   }, []);
 
+  const { t } = useTranslation();
+
   return (
     <Layout>
       <PostContext.Provider
@@ -121,7 +124,7 @@ function OneLecturePage() {
       >
         <div className="px-2 mt-4 md:px-4 lg:px-10">
           <article className="mb-4 pb-2 border-b-2 border-[rgba(0,0,0,0.2)]">
-            <GoToPreviousPage text="강의 목록으로 돌아가기" to="/lecture" />
+            <GoToPreviousPage text={t("lecture.backToTable")} to="/lecture" />
 
             {isLoading && <div>데이터 로딩중...</div>}
 

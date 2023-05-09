@@ -1,6 +1,6 @@
 import React, { useState, useReducer, useEffect } from "react";
-
 import { BiShow, BiHide } from "react-icons/bi";
+
 import { validate } from "../utils/validators";
 import UnValidText from "./UnValidText";
 import ValidText from "./ValidText";

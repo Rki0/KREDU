@@ -91,6 +91,7 @@ import { PostContext } from "../../context/post-context";
 import { useHttpClient } from "../../hoc/http-hook";
 import getDate from "../../utils/getDate";
 import CommentTextareaButton from "./CommentTextareaButton";
+import { useTranslation } from "react-i18next";
 
 interface CommentTextareaProps {
   setCreatedComments: React.Dispatch<React.SetStateAction<any[]>>;
@@ -142,14 +143,16 @@ function CommentTextarea(props: CommentTextareaProps) {
     } catch (err) {}
   };
 
+  const { t } = useTranslation();
+
   return (
     <div className="flex flex-col">
       <form className="flex flex-col" onSubmit={commentSubmitHandler}>
         <textarea
           placeholder={
             auth.isLoggedIn
-              ? "댓글 입력(최대 200자)"
-              : "로그인이 필요한 기능입니다."
+              ? t("comment.placeholder")
+              : t("comment.pleaseLogin")
           }
           minLength={1}
           maxLength={200}
@@ -161,7 +164,7 @@ function CommentTextarea(props: CommentTextareaProps) {
 
         <div className="flex justify-end">
           <CommentTextareaButton buttonType="submit">
-            등록
+            {t("comment.submit")}
           </CommentTextareaButton>
         </div>
       </form>

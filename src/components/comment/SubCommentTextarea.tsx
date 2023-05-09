@@ -109,6 +109,7 @@ import { CommentContext } from "../../context/comment-context";
 import { useHttpClient } from "../../hoc/http-hook";
 import getDate from "../../utils/getDate";
 import CommentTextareaButton from "./CommentTextareaButton";
+import { useTranslation } from "react-i18next";
 
 interface CommentTextareaProps {
   subCommentCreateHandler: () => void;
@@ -167,14 +168,16 @@ function SubCommentTextarea(props: CommentTextareaProps) {
     } catch (err) {}
   };
 
+  const { t } = useTranslation();
+
   return (
     <div className="flex flex-col">
       <form className="flex flex-col" onSubmit={commentSubmitHandler}>
         <textarea
           placeholder={
             auth.isLoggedIn
-              ? "답글 입력(최대 200자)"
-              : "로그인이 필요한 기능입니다."
+              ? t("comment.placeholder")
+              : t("comment.pleaseLogin")
           }
           autoFocus
           minLength={1}
@@ -190,10 +193,10 @@ function SubCommentTextarea(props: CommentTextareaProps) {
             buttonType="reset"
             clickHandler={props.subCommentCreateHandler}
           >
-            취소
+            {t("comment.subcomment.cancel")}
           </CommentTextareaButton>
           <CommentTextareaButton buttonType="submit">
-            등록
+            {t("comment.subcomment.submit")}
           </CommentTextareaButton>
         </div>
       </form>

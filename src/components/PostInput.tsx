@@ -34,7 +34,7 @@ function PostInput(props: PostInputProps) {
   if (props.isTextarea) {
     return (
       <textarea
-        placeholder="내용을 입력하세요(최대 1000자)"
+        placeholder={props.placeholder}
         minLength={props.minLength}
         maxLength={props.maxLength}
         required={props.required}

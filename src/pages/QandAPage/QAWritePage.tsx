@@ -10,6 +10,7 @@ import getDate from "../../utils/getDate";
 import { useHttpClient } from "../../hoc/http-hook";
 import { AuthContext } from "../../context/auth-context";
 import Modal from "../../shared/Modal";
+import { useTranslation } from "react-i18next";
 
 function LectureWritePage() {
   const auth = useContext(AuthContext);
@@ -88,6 +89,8 @@ function LectureWritePage() {
     navigate("/qa");
   };
 
+  const { t } = useTranslation();
+
   return (
     <Layout>
       {isModalOpen && (
@@ -110,14 +113,14 @@ function LectureWritePage() {
       <div className="px-2 mt-4 md:px-8 md:pt-8 lg:px-12 lg:pt-12 xl:px-32 xl:pt-20">
         <form className="flex flex-col" onSubmit={submitHandler}>
           <div className="py-1 border-b-2 border-[#ffcdd2]">
-            작성자 : {auth.nickname}
+            {t("qa.write.writer")} {auth.nickname}
           </div>
 
           <PostInput
             id="title"
-            label="제목 :"
+            label={t("qa.write.title")}
             type="text"
-            placeholder="제목을 입력하세요(최소 1자, 최대 30자)"
+            placeholder={t("qa.write.titlePlaceholder")}
             required
             value={formState.inputs.title.value}
             onInput={inputHandler}
@@ -130,7 +133,7 @@ function LectureWritePage() {
 
           <PostInput
             id="description"
-            placeholder="내용을 입력하세요(최소 1자, 최대 1000자)"
+            placeholder={t("qa.write.inputPlaceholder")}
             required
             value={formState.inputs.description.value}
             onInput={inputHandler}
@@ -145,11 +148,11 @@ function LectureWritePage() {
               clickHandler={cancelHandler}
               isValid={false}
             >
-              취소
+              {t("qa.write.cancel")}
             </Button>
 
             <Button submitMode={true} isValid={true}>
-              등록
+              {t("qa.write.submit")}
             </Button>
           </div>
         </form>

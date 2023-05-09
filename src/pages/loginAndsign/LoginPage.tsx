@@ -13,6 +13,7 @@ import {
 } from "../../utils/validators";
 import Button from "../../components/Button";
 import { AuthContext } from "../../context/auth-context";
+import { useTranslation } from "react-i18next";
 
 function LoginPage() {
   const [formState, inputHandler] = useForm(
@@ -63,6 +64,8 @@ function LoginPage() {
     } catch (err) {}
   };
 
+  const { t } = useTranslation();
+
   return (
     <Layout>
       <div className="flex flex-col items-center mt-4 lg:mt-32 xl:mt-52">
@@ -77,8 +80,8 @@ function LoginPage() {
           <Input
             id="email"
             type="email"
-            label="이메일"
-            placeholder="이메일을 입력해주세요."
+            label={t("login.email")}
+            placeholder={t("login.emailPlaceholder")}
             value={formState.inputs.email.value}
             onInput={inputHandler}
             validators={[VALIDATOR_EMAIL()]}
@@ -86,9 +89,9 @@ function LoginPage() {
 
           <Input
             id="password"
-            label="비밀번호"
+            label={t("login.password")}
             type="password"
-            placeholder="비밀번호를 입력해주세요."
+            placeholder={t("login.passwordPlaceholder")}
             minLength={8}
             maxLength={12}
             value={formState.inputs.password.value}
@@ -97,7 +100,7 @@ function LoginPage() {
           />
 
           <Button isValid={formState.isValid} submitMode={true}>
-            로그인
+            {t("login.loginBtn")}
           </Button>
         </form>
 

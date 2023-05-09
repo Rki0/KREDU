@@ -1,0 +1,125 @@
+{
+  "header": {
+    "lecture": "授業",
+    "qa": "質問掲示板",
+    "mypage": "マイページ",
+    "auth": "ログイン / 会員登録",
+    "channel": "適度に韓国語",
+    "logout": "ログアウト"
+  },
+  "table": {
+    "title": "タイトル",
+    "date": "掲示日",
+    "like": "いいね",
+    "comment": "コメント"
+  },
+  "lecture": {
+    "searchPlaceholder": "授業のタイトルを入力してください。",
+    "backToTable": "授業リストに戻る"
+  },
+  "qa": {
+    "searchPlaceholder": "キーワードを入力してください。",
+    "backToTable": "質問リストに戻る",
+    "write": {
+      "writer": "作成者 : ",
+      "title": "タイトル :",
+      "titlePlaceholder": "タイトルを入力してください（最小1文字、最大30文字）",
+      "inputPlaceholder": "内容を入力してください（最小1文字、最大1000文字）",
+      "cancel": "キャンセル",
+      "submit": "登録"
+    }
+  },
+  "file": {
+    "file": "添付ファイル :",
+    "fileButton": "添付する"
+  },
+  "post": {
+    "title": "タイトル",
+    "date": "掲示日",
+    "file": "添付ファイル",
+    "writer": "作成者"
+  },
+  "comment": {
+    "placeholder": "コメント入力（最大200文字）",
+    "pleaseLogin": "ログインが必要な機能です。",
+    "submit": "登録",
+    "amount": "コメント",
+    "sortDate": "最新順",
+    "sortLike": "人気順",
+    "createSubcomment": "答文",
+    "subcommentUnit": "個 ",
+    "showSubComment": "見る",
+    "hiddenSubcomment": "畳む",
+    "subcomment": {
+      "cancel": "キャンセル",
+      "submit": "登録"
+    }
+  },
+  "login": {
+    "email": "メール",
+    "password": "パスワード",
+    "emailPlaceholder": "メールを入力してください。",
+    "passwordPlaceholder": "パスワードを入力してください。",
+    "loginBtn": "ログイン",
+    "moveTo": "会員登録",
+    "askSignin": "まだ会員登録をしていませんか？"
+  },
+  "signin": {
+    "nickname": "ニックネーム",
+    "email": "メール",
+    "password": "パスワード",
+    "passwordCheck": "パスワード チェック",
+    "nicknamePlaceholder": "ニックネーム入力(最大10文字)",
+    "emailPlaceholder": "メール入力",
+    "passwordPlaceholder": "パスワード入力(8~12文字)",
+    "passwordCheckPlaceholder": "パスワードをもう一度確認してください。",
+    "signinBtn": "会員登録",
+    "moveTo": "ログイン",
+    "askSignin": "すでに会員登録をされていますか？"
+  },
+  "auth": {
+    "then": "すると ",
+    "go": "に移動してください。"
+  },
+  "mypage": {
+    "hello": "こんにちは, ",
+    "MrMs": "さん!",
+    "revise": "個人情報を修正",
+    "like": "「いいね」表示した講義",
+    "qa": "私の質問",
+    "placeholder": "キーワードを入力してください。"
+  },
+  "mypageRevise": {
+    "title": "個人情報修正",
+    "profile": {
+      "title": "プロフィール写真",
+      "button": "変更する"
+    },
+    "nickname": {
+      "title": "ニックネーム",
+      "button": "修正する",
+      "cancel": "キャンセル",
+      "submit": "登録",
+      "placeholder": "10文字以内"
+    },
+    "password": {
+      "title": "パスワード変更",
+      "button": "変更する",
+      "currPswd": "現在のパスワード",
+      "currPswdPlaceholder": "現在のパスワードを入力してください。",
+      "newPswd": "新しいパスワード",
+      "newPswdPlaceholder": "新しいパスワード入力(8~12文字)",
+      "checkPswd": "パスワードチェック",
+      "checkPswdPlaceholder": "パスワードをもう一度確認してください。",
+      "cancel": "キャンセル",
+      "submit": "変更"
+    }
+  },
+  "mypageLike": {
+    "title": "「いいね」表示した講義"
+  },
+  "mypageQA": {
+    "title": "私の質問"
+  },
+  "empty": "データがありません。"
+}

@@ -73,6 +73,7 @@
 
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import Layout from "../../layout/Layout";
 import GoToPreviousPage from "../../components/GoToPreviousPage";
@@ -109,6 +110,8 @@ function OneWishPage() {
     fetchQA();
   }, []);
 
+  const { t } = useTranslation();
+
   return (
     <Layout>
       <PostContext.Provider
@@ -119,7 +122,7 @@ function OneWishPage() {
       >
         <div className="px-2 mt-4 md:px-4 lg:px-10">
           <article className="mb-4 pb-2 border-b-2 border-[rgba(0,0,0,0.2)]">
-            <GoToPreviousPage text="질문 게시판으로 돌아가기" to="/qa" />
+            <GoToPreviousPage text={t("qa.backToTable")} to="/qa" />
 
             {isLoading && <div>데이터 로딩중...</div>}
 
